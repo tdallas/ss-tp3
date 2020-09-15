@@ -1,25 +1,23 @@
 package engine;
 
 import model.Particle;
+import model.Wall;
+import model.WallType;
 
+import java.awt.geom.Line2D;
 import java.util.*;
 
 public class CellIndexMethod {
     private final Cell[][] matrix;
     private final Map<Particle, Set<Particle>> neighbours;
-    private final boolean periodicBoundary;
+    private final List<Wall> walls;
     private final double interactionRadius;
-    private final double length;
-    private final int size;
+    private int size;
     private final double cellLength;
 
-    public CellIndexMethod(List<Particle> particles, boolean periodicBoundary, double interactionRadius, double length, int size) throws IllegalArgumentException {
-        this.matrix = new Cell[size][size];
-        this.periodicBoundary = periodicBoundary;
+    public CellIndexMethod(List<Particle> particles, List<Wall> walls, double interactionRadius, double length) {
         this.interactionRadius = interactionRadius;
-        this.length = length;
-        this.size = size;
-        this.cellLength = length / size;
+        this.walls = walls;
         this.neighbours = new HashMap<>();
         double maxRadius = 0;
         for (Particle p : particles) {
@@ -28,10 +26,12 @@ public class CellIndexMethod {
             }
             neighbours.put(p, new HashSet<>());
         }
-        //Check argument l/m > 2*rMax + rc
+        this.size = (int)(length / (2 * maxRadius + interactionRadius));
         if ((length / size) < (2 * maxRadius + interactionRadius)) {
-            throw new IllegalArgumentException("Incorrect arguments for Cell Index Method.");
+            this.size--;
         }
+        this.cellLength = length / size;
+        this.matrix = new Cell[size][size];
     }
 
     public Map<Particle, Set<Particle>> getNeighbours(List<Particle> particles) {
@@ -41,18 +41,6 @@ public class CellIndexMethod {
         fillMatrix(particles);
         fillNeighbours();
         return neighbours;
-    }
-
-    public double getLength() {
-        return length;
-    }
-
-    public double getInteractionRadius() {
-        return interactionRadius;
-    }
-
-    public int getSize() {
-        return size;
     }
 
     private void fillMatrix(List<Particle> particles) {
@@ -81,12 +69,6 @@ public class CellIndexMethod {
                             for (Particle q : matrix[xComp][yComp].getParticles()) {
                                 addNeighbour(p, q);
                             }
-                        } else if (periodicBoundary) {
-                            xComp = (xComp + size) % size;
-                            yComp = (yComp + size) % size;
-                            for (Particle q : matrix[xComp][yComp].getParticles()) {
-                                addNeighbour(p, q);
-                            }
                         }
                     }
                 }
@@ -104,27 +86,40 @@ public class CellIndexMethod {
         double qX = q.getXPosition();
         double qY = q.getYPosition();
 
-        if (periodicBoundary) {
-            if (pX < qX && pX + 2 * cellLength <= qX) {
-                pX += length;
-            }
-            if (qX < pX && qX + 2 * cellLength <= pX) {
-                qX += length;
-            }
-            if (pY < qY && pY + 2 * cellLength <= qY) {
-                pY += length;
-            }
-            if (qY < pY && qY + 2 * cellLength <= pY) {
-                qY += length;
-            }
-        }
-
         double distance = Math.hypot(pX - qX, pY - qY) - p.getRadius() - q.getRadius();
 
-        if (distance < interactionRadius) {
+        if (!isWallInBetween(p, q) && distance < interactionRadius) {
             neighbours.get(p).add(q);
             neighbours.get(q).add(p);
         }
+    }
+
+    private boolean isWallInBetween(Particle p, Particle q) {
+        double pX = p.getXPosition();
+        double pY = p.getYPosition();
+        double qX = q.getXPosition();
+        double qY = q.getYPosition();
+        double wX, wY, wLength;
+        for(Wall wall : walls){
+            wX = wall.getXPosition();
+            wY = wall.getYPosition();
+            wLength = wall.getLength();
+            if(wall.getWallType() == WallType.HORIZONTAL){
+                if((pX < wX && qX > wX) || (pX > wX && qX < wX)){
+                    if(Line2D.linesIntersect(pX, pY, qX, qY, wX, wY, wX, wY + wLength)) {
+                        return true;
+                    }
+                }
+            }
+            else{
+                if((pY < wY && qY > wY) || (pY > wY && qY < wY)){
+                    if(Line2D.linesIntersect(pX, pY, qX, qY, wX, wY, wX + wLength, wY)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private static class Cell {
