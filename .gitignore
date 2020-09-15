@@ -27,4 +27,4 @@ hs_err_pid*
 *.idea
 /target
 /idea
-ss-tp3.iml
+*.iml
