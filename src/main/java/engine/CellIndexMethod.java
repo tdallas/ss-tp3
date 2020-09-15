@@ -26,7 +26,7 @@ public class CellIndexMethod {
             }
             neighbours.put(p, new HashSet<>());
         }
-        this.size = (int)(length / (2 * maxRadius + interactionRadius));
+        this.size = (int) (length / (2 * maxRadius + interactionRadius));
         if ((length / size) < (2 * maxRadius + interactionRadius)) {
             this.size--;
         }
@@ -100,20 +100,19 @@ public class CellIndexMethod {
         double qX = q.getXPosition();
         double qY = q.getYPosition();
         double wX, wY, wLength;
-        for(Wall wall : walls){
+        for (Wall wall : walls) {
             wX = wall.getXPosition();
             wY = wall.getYPosition();
             wLength = wall.getLength();
-            if(wall.getWallType() == WallType.HORIZONTAL){
-                if((pX < wX && qX > wX) || (pX > wX && qX < wX)){
-                    if(Line2D.linesIntersect(pX, pY, qX, qY, wX, wY, wX, wY + wLength)) {
+            if (wall.getWallType() == WallType.HORIZONTAL) {
+                if ((pX < wX && qX > wX) || (pX > wX && qX < wX)) {
+                    if (Line2D.linesIntersect(pX, pY, qX, qY, wX, wY, wX, wY + wLength)) {
                         return true;
                     }
                 }
-            }
-            else{
-                if((pY < wY && qY > wY) || (pY > wY && qY < wY)){
-                    if(Line2D.linesIntersect(pX, pY, qX, qY, wX, wY, wX + wLength, wY)) {
+            } else {
+                if ((pY < wY && qY > wY) || (pY > wY && qY < wY)) {
+                    if (Line2D.linesIntersect(pX, pY, qX, qY, wX, wY, wX + wLength, wY)) {
                         return true;
                     }
                 }
