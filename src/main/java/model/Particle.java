@@ -18,6 +18,11 @@ public class Particle {
     private final double radius;
     private final double mass;
 
+    public void evolveOverTime(double time){
+        xPosition = xPosition + xVelocity * time;
+        yPosition = yPosition + yVelocity * time;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

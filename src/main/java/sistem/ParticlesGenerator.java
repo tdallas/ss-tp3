@@ -40,13 +40,13 @@ public class ParticlesGenerator {
     }
 
     private void generateWalls() {
-        walls.add(new Wall(WallType.HORIZONTAL, 0, 0, yLength));
-        walls.add(new Wall(WallType.HORIZONTAL, xLength, 0, yLength));
-        walls.add(new Wall(WallType.VERTICAL, 0, 0, xLength));
-        walls.add(new Wall(WallType.VERTICAL, 0, yLength, xLength));
-        double length = (xLength - doorSize) / 2;
-        walls.add(new Wall(WallType.VERTICAL, 0, yLength / 2, length));
-        walls.add(new Wall(WallType.VERTICAL, length + doorSize, yLength / 2, length));
+        walls.add(new Wall(WallType.HORIZONTAL, 0, 0, xLength));
+        walls.add(new Wall(WallType.HORIZONTAL, 0, yLength, xLength));
+        walls.add(new Wall(WallType.VERTICAL, 0, 0, yLength));
+        walls.add(new Wall(WallType.VERTICAL, xLength, 0, yLength));
+        double length = (yLength - doorSize) / 2;
+        walls.add(new Wall(WallType.VERTICAL, xLength / 2, 0, length));
+        walls.add(new Wall(WallType.VERTICAL, xLength / 2, length + doorSize, length));
     }
 
     private void generateRandomParticles() {
@@ -63,8 +63,8 @@ public class ParticlesGenerator {
         boolean particleOverlaps = true;
 
         while (particleOverlaps && attempts < ALLOWED_ATTEMPTS) {
-            randomX = generateRandomDouble(0, xLength);
-            randomY = generateRandomDouble(0, yLength / 2);
+            randomX = generateRandomDouble(0, xLength / 2);
+            randomY = generateRandomDouble(0, yLength);
             checkedParticles = checkCorrectParticleDistribution(randomX, randomY, radius);
             if (checkedParticles == particles.size()) {
                 particleOverlaps = false;
