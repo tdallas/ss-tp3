@@ -1,5 +1,7 @@
+import engine.CutCondition;
 import engine.EventDrivenSimulation;
 import org.apache.commons.cli.*;
+import sistem.EquilibriumCutCondition;
 import sistem.ParticlesGenerator;
 
 import java.util.Random;
@@ -15,26 +17,27 @@ public class Main {
     private static final double mass = 1;         //kg
     private static final double radius = 0.0015;  //meters
     private static final double velocity = 0.01;  //meters per second
+    private static final double equilibriumPercentage = 0.10;
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         parseArguments(args);
         //Just in case testing is needed to have the same seed on everything (argument -s is optional)
         Random random;
-        if(seed == null) {
+        if (seed == null) {
             random = new Random();
             seed = random.nextLong();
             random.setSeed(seed);
-        }
-        else{
+        } else {
             random = new Random(seed);
         }
 
         ParticlesGenerator particlesGenerator = new ParticlesGenerator(random, doorSize, xLength, yLength, numberOfParticles, mass, radius, velocity);
-        EventDrivenSimulation eventDrivenSimulation = new EventDrivenSimulation(particlesGenerator.getParticles(), particlesGenerator.getWalls(), deltaTime, filename);
+        CutCondition equilibriumCutCondition = new EquilibriumCutCondition(particlesGenerator.getParticles(), xLength, equilibriumPercentage);
+        EventDrivenSimulation eventDrivenSimulation = new EventDrivenSimulation(particlesGenerator.getParticles(), particlesGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition);
         eventDrivenSimulation.simulate();
     }
 
-    private static void parseArguments(String[] args){
+    private static void parseArguments(String[] args) {
         Options options = new Options();
 
         Option numberParticlesOption = new Option("n", "n-particles", true, "number of particles");
@@ -68,37 +71,37 @@ public class Main {
 
         try {
             numberOfParticles = Integer.parseInt(cmd.getOptionValue("n-particles"));
-        } catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             System.out.println("Invalid argument number of particles, must be integer");
             System.exit(1);
         }
-        if(numberOfParticles < 0 || numberOfParticles > 10000){
+        if (numberOfParticles < 0 || numberOfParticles > 10000) {
             System.out.println("Invalid number of particles, must be positive lower than 10000");
             System.exit(1);
         }
 
         try {
             deltaTime = Double.parseDouble(cmd.getOptionValue("time-delta"));
-        } catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             System.out.println("Invalid argument number of particles, must be double");
             System.exit(1);
         }
-        if(deltaTime < 0){
+        if (deltaTime < 0) {
             System.out.println("Invalid time delta, must be positive");
             System.exit(1);
         }
 
         filename = cmd.getOptionValue("output");
-        if(filename.equals("walls")){
+        if (filename.equals("walls")) {
             System.out.println("Invalid filename, cannot be named: walls");
             System.exit(1);
         }
 
         String aux = cmd.getOptionValue("seed");
-        if(aux != null) {
+        if (aux != null) {
             try {
                 seed = Long.parseLong(aux);
-            } catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 System.out.println("Invalid argument seed, must be long");
                 System.exit(1);
             }

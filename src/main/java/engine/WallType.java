@@ -1,3 +1,3 @@
-package model;
+package engine;
 
 public enum WallType {VERTICAL, HORIZONTAL}

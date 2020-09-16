@@ -1,8 +1,8 @@
 package sistem;
 
-import model.Particle;
-import model.Wall;
-import model.WallType;
+import engine.Particle;
+import engine.Wall;
+import engine.WallType;
 
 import java.util.ArrayList;
 import java.util.List;

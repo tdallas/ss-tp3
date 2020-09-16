@@ -1,10 +1,8 @@
 package engine;
 
-import model.Particle;
-
 import java.util.Objects;
 
-public class ParticlesCollision extends Collision{
+public class ParticlesCollision extends Collision {
     private final Particle p;
     private final Particle q;
 
@@ -19,15 +17,15 @@ public class ParticlesCollision extends Collision{
         double[] deltaR, deltaV, newVelocity;
         double deltaVR, deltaRadius, j;
 
-        deltaR = new double[] {q.getXPosition() - p.getXPosition(), q.getYPosition() - p.getYPosition()};
-        deltaV = new double[] {q.getXVelocity() - p.getXVelocity(), q.getYVelocity() - p.getYVelocity()};
+        deltaR = new double[]{Math.abs(q.getXPosition() - p.getXPosition()), Math.abs(q.getYPosition() - p.getYPosition())};
+        deltaV = new double[]{Math.abs(q.getXVelocity() - p.getXVelocity()), Math.abs(q.getYVelocity() - p.getYVelocity())};
 
         deltaVR = deltaV[0] * deltaR[0] + deltaV[1] * deltaR[1];
         deltaRadius = p.getRadius() + q.getRadius();
 
         j = (2 * p.getMass() * q.getMass() * deltaVR) / (deltaRadius * (p.getMass() + q.getMass()));
 
-        newVelocity = new double[] {j * deltaR[0] / deltaRadius, j * deltaR[1] / deltaRadius};
+        newVelocity = new double[]{j * deltaR[0] / deltaRadius, j * deltaR[1] / deltaRadius};
         p.setXVelocity(p.getXVelocity() + newVelocity[0] / p.getMass());
         p.setYVelocity(p.getYVelocity() + newVelocity[1] / p.getMass());
         q.setXVelocity(q.getXVelocity() - newVelocity[0] / q.getMass());
@@ -36,10 +34,9 @@ public class ParticlesCollision extends Collision{
 
     @Override
     public int compareTo(Collision c) {
-        if(getTimeToCollision() > c.getTimeToCollision()){
+        if (getTimeToCollision() > c.getTimeToCollision()) {
             return 1;
-        }
-        else if(getTimeToCollision() < c.getTimeToCollision()) {
+        } else if (getTimeToCollision() < c.getTimeToCollision()) {
             return -1;
         }
         return 0;

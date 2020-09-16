@@ -1,4 +1,4 @@
-package model;
+package engine;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class Particle {
     private final double radius;
     private final double mass;
 
-    public void evolveOverTime(double time){
+    public void evolveOverTime(double time) {
         xPosition = xPosition + xVelocity * time;
         yPosition = yPosition + yVelocity * time;
     }

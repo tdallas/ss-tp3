@@ -1,12 +1,8 @@
 package engine;
 
-import model.Particle;
-import model.Wall;
-import model.WallType;
-
 import java.util.Objects;
 
-public class WallCollision extends Collision{
+public class WallCollision extends Collision {
     private final Particle particle;
     private final Wall wall;
 
@@ -18,20 +14,18 @@ public class WallCollision extends Collision{
 
     @Override
     public void collide() {
-        if(wall.getWallType() == WallType.HORIZONTAL){
+        if (wall.getWallType() == WallType.HORIZONTAL) {
             particle.setYVelocity(-particle.getYVelocity());
-        }
-        else{
+        } else {
             particle.setXVelocity(-particle.getXVelocity());
         }
     }
 
     @Override
     public int compareTo(Collision c) {
-        if(getTimeToCollision() > c.getTimeToCollision()){
+        if (getTimeToCollision() > c.getTimeToCollision()) {
             return 1;
-        }
-        else if(getTimeToCollision() < c.getTimeToCollision()) {
+        } else if (getTimeToCollision() < c.getTimeToCollision()) {
             return -1;
         }
         return 0;
