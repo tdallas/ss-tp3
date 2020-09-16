@@ -1,5 +1,7 @@
 package engine;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class ParticlesCollision extends Collision {
@@ -30,6 +32,21 @@ public class ParticlesCollision extends Collision {
         p.setYVelocity(p.getYVelocity() + newVelocity[1] / p.getMass());
         q.setXVelocity(q.getXVelocity() - newVelocity[0] / q.getMass());
         q.setYVelocity(q.getYVelocity() - newVelocity[1] / q.getMass());
+    }
+
+    @Override
+    public List<Particle> getCollisionParticles() {
+        return Arrays.asList(p, q);
+    }
+
+    @Override
+    public boolean containsParticles(List<Particle> particles) {
+        for(Particle particle : particles){
+            if(particle.equals(p) || particle.equals(q)){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

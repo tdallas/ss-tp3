@@ -1,5 +1,8 @@
 package engine;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class WallCollision extends Collision {
@@ -19,6 +22,21 @@ public class WallCollision extends Collision {
         } else {
             particle.setXVelocity(-particle.getXVelocity());
         }
+    }
+
+    @Override
+    public List<Particle> getCollisionParticles() {
+        return Collections.singletonList(particle);
+    }
+
+    @Override
+    public boolean containsParticles(List<Particle> particles) {
+        for(Particle p : particles){
+            if(p.equals(particle)){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

@@ -29,14 +29,11 @@ public class EventDrivenSimulation {
     }
 
     public void simulate() {
+        fillQueue();
         Collision collision;
-        while (!cutCondition.isFinished()) {
-            fillQueue();
+        while (!cutCondition.isFinished() && !collisions.isEmpty()) {
 
             collision = collisions.poll();
-            if (collision == null) {
-                continue;
-            }
             collisionsCount++;
 
             for (Particle particle : particles) {
@@ -51,6 +48,7 @@ public class EventDrivenSimulation {
             }
 
             collision.collide();
+            refillQueue(collision);
         }
         System.out.println("Finished");
     }
@@ -64,14 +62,35 @@ public class EventDrivenSimulation {
             for (int j = i + 1; j < particles.size(); j++) {
                 q = particles.get(j);
                 aux = timeToParticleCollision(p, q);
-                if (aux != null) {
+                if (aux != null && aux > 0.0001) {
                     collisions.add(new ParticlesCollision(aux, p, q));
                 }
             }
             for (Wall wall : walls) {
                 aux = timeToWallCollision(p, wall);
-                if (aux != null) {
+                if (aux != null && aux > 0) {
                     collisions.add(new WallCollision(aux, p, wall));
+                }
+            }
+        }
+    }
+
+    public void refillQueue(Collision collision){
+        Double aux;
+        collisions.removeIf(h -> h.containsParticles(collision.getCollisionParticles()));
+        for(Particle q : collision.getCollisionParticles()){
+            for(Particle p : particles){
+                if(!p.equals(q)) {
+                    aux = timeToParticleCollision(p, q);
+                    if (aux != null && aux > 0.0001) {
+                        collisions.add(new ParticlesCollision(aux, p, q));
+                    }
+                }
+            }
+            for (Wall wall : walls) {
+                aux = timeToWallCollision(q, wall);
+                if (aux != null && aux > 0) {
+                    collisions.add(new WallCollision(aux, q, wall));
                 }
             }
         }
@@ -115,13 +134,16 @@ public class EventDrivenSimulation {
             if (p.getXVelocity() > 0) {
                 if (p.getXPosition() < wall.getXPosition()) {
                     if (Line2D.linesIntersect(p.getXPosition(), p.getYPosition(), p.getXPosition() + p.getXVelocity()*20, p.getYPosition() + p.getYVelocity()*20, wall.getXPosition(), wall.getYPosition(), wall.getXPosition(), wall.getYPosition() + wall.getLength())) {
-                        //return (wall.getXPosition() - p.getRadius() - p.getXPosition()) / p.getXVelocity();
+                        return (wall.getXPosition() - p.getRadius() - p.getXPosition()) / p.getXVelocity();
                     }
                 }
             } else {
                 if (p.getXPosition() > wall.getXPosition()) {
                     if (Line2D.linesIntersect(p.getXPosition(), p.getYPosition(), p.getXPosition() + p.getXVelocity()*20, p.getYPosition() + p.getYVelocity()*20, wall.getXPosition(), wall.getYPosition(), wall.getXPosition(), wall.getYPosition() + wall.getLength())) {
-                        //return (p.getRadius() - p.getXPosition()) / p.getXVelocity();
+                        if(wall.getXPosition() > 0){
+                            return (wall.getXPosition() - p.getRadius() - p.getXPosition()) / p.getXVelocity();
+                        }
+                        return (p.getRadius() - p.getXPosition()) / p.getXVelocity();
                     }
                 }
             }
