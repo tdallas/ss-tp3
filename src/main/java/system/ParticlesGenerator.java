@@ -1,4 +1,4 @@
-package sistem;
+package system;
 
 import engine.Particle;
 import engine.Wall;

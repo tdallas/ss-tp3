@@ -1,6 +1,6 @@
 package engine;
 
-import sistem.FileGenerator;
+import system.FileGenerator;
 
 import java.awt.geom.Line2D;
 import java.util.List;

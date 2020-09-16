@@ -1,4 +1,4 @@
-package sistem;
+package system;
 
 import engine.CutCondition;
 import engine.Particle;

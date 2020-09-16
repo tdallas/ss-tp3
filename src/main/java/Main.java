@@ -1,8 +1,8 @@
 import engine.CutCondition;
 import engine.EventDrivenSimulation;
 import org.apache.commons.cli.*;
-import sistem.EquilibriumCutCondition;
-import sistem.ParticlesGenerator;
+import system.EquilibriumCutCondition;
+import system.ParticlesGenerator;
 
 import java.util.Random;
 
