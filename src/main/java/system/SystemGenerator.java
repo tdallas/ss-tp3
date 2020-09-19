@@ -12,26 +12,26 @@ public class SystemGenerator {
     private final Random rand;
     private final List<Particle> particles;
     private final List<Wall> walls;
-    private final double xLength;
-    private final double yLength;
+    public static double xLength;
+    public static double yLength;
+    public static double doorSize;
     private final double velocity;
     private double quantity;
     private final double radius;
     private int idCounter;
     private final double mass;
-    private final double doorSize;
 
     private static final int ALLOWED_ATTEMPTS = 30;
 
     public SystemGenerator(Random random, double doorSize, double xLength, double yLength, int quantity, double mass, double radius, double velocity) {
         this.rand = random;
-        this.doorSize = doorSize;
-        this.radius = radius;
         this.xLength = xLength;
         this.yLength = yLength;
+        this.doorSize = doorSize;
         this.quantity = quantity;
+        this.radius = radius;
         this.velocity = velocity;
-        this.idCounter = 1;
+        this.idCounter = 0;
         this.mass = mass;
         this.particles = new ArrayList<>();
         this.walls = new ArrayList<>();

@@ -19,8 +19,8 @@ public class ParticlesCollision extends Collision {
         double[] deltaR, deltaV, newVelocity;
         double deltaVR, deltaRadius, j;
 
-        deltaR = new double[]{Math.abs(q.getXPosition() - p.getXPosition()), Math.abs(q.getYPosition() - p.getYPosition())};
-        deltaV = new double[]{Math.abs(q.getXVelocity() - p.getXVelocity()), Math.abs(q.getYVelocity() - p.getYVelocity())};
+        deltaR = new double[]{q.getXPosition() - p.getXPosition(), q.getYPosition() - p.getYPosition()};
+        deltaV = new double[]{q.getXVelocity() - p.getXVelocity(), q.getYVelocity() - p.getYVelocity()};
 
         deltaVR = deltaV[0] * deltaR[0] + deltaV[1] * deltaR[1];
         deltaRadius = p.getRadius() + q.getRadius();

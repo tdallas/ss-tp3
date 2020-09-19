@@ -1,16 +1,17 @@
 package engine;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
+@Setter
+@Getter
 public abstract class Collision implements Comparable<Collision> {
-    private final double timeToCollision;
+    private double timeToCollision;
 
     public Collision(double timeToCollision) {
         this.timeToCollision = timeToCollision;
-    }
-
-    public double getTimeToCollision() {
-        return timeToCollision;
     }
 
     public abstract void collide();

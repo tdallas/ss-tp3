@@ -1,8 +1,8 @@
 package engine;
 
 import system.FileGenerator;
+import system.SystemGenerator;
 
-import java.awt.geom.Line2D;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -24,13 +24,23 @@ public class EventDrivenSimulation {
         this.fileGenerator = new FileGenerator(filename, particles, walls);
         this.collisionsCount = 0;
         this.nextSave = deltaTime;
-        this.collisions = new PriorityQueue<>();
+        this.collisions = new PriorityQueue<>((o1, o2) -> {
+            if (o1.getTimeToCollision() > o2.getTimeToCollision()) {
+                return 1;
+            } else if (o1.getTimeToCollision() < o2.getTimeToCollision()) {
+                return -1;
+            }
+            return 0;
+        });
         this.cutCondition = cutCondition;
     }
 
     public void simulate() {
-        fillQueue();
         Collision collision;
+        double tC;
+
+        fillQueue();
+
         while (!cutCondition.isFinished() && !collisions.isEmpty()) {
 
             collision = collisions.poll();
@@ -38,6 +48,9 @@ public class EventDrivenSimulation {
 
             for (Particle particle : particles) {
                 particle.evolveOverTime(collision.getTimeToCollision());
+            }
+            for(Collision c : collisions){
+                c.setTimeToCollision(c.getTimeToCollision() - collision.getTimeToCollision());
             }
 
             timePassed += collision.getTimeToCollision();
@@ -65,12 +78,7 @@ public class EventDrivenSimulation {
                     collisions.add(new ParticlesCollision(aux, p, q));
                 }
             }
-            for (Wall wall : walls) {
-                aux = timeToWallCollision(p, wall);
-                if (aux != null) {
-                    collisions.add(new WallCollision(aux, p, wall));
-                }
-            }
+            addTimeToWallCollisions(p);
         }
     }
 
@@ -86,12 +94,7 @@ public class EventDrivenSimulation {
                     }
                 }
             }
-            for (Wall wall : walls) {
-                aux = timeToWallCollision(q, wall);
-                if (aux != null) {
-                    collisions.add(new WallCollision(aux, q, wall));
-                }
-            }
+            addTimeToWallCollisions(q);
         }
     }
 
@@ -115,36 +118,67 @@ public class EventDrivenSimulation {
         return -((deltaVR + Math.sqrt(d)) / deltaVSquared);
     }
 
-    //ESTA FUNCION ESTA MAL CREO QUE ARREGLANDOLA DEBERIA FUNCIONAR LA SIMULACION
-    private Double timeToWallCollision(Particle p, Wall wall) {
-        if (wall.getWallType() == WallType.HORIZONTAL) {
-            if (p.getYVelocity() > 0) {
-                if (p.getYPosition() < wall.getYPosition()) {
-                    return (wall.getYPosition() + wall.getLength() - p.getRadius() - p.getYPosition()) / p.getYVelocity();
-                }
-            } else {
-                if (p.getYPosition() > wall.getYPosition()) {
-                    return (wall.getYPosition() + wall.getLength() - p.getRadius() - p.getYPosition()) / p.getYVelocity();
-                }
-            }
-        } else {
-            if (p.getXVelocity() > 0) {
-                if (p.getXPosition() < wall.getXPosition()) {
-                    if (Line2D.linesIntersect(p.getXPosition(), p.getYPosition(), p.getXPosition() + p.getXVelocity() * 20, p.getYPosition() + p.getYVelocity() * 20, wall.getXPosition(), wall.getYPosition(), wall.getXPosition(), wall.getYPosition() + wall.getLength())) {
-                        return (wall.getXPosition() + wall.getLength() - p.getRadius() - p.getXPosition()) / p.getXVelocity();
-                    }
-                }
-            } else {
-                if (p.getXPosition() > wall.getXPosition()) {
-                    if (Line2D.linesIntersect(p.getXPosition(), p.getYPosition(), p.getXPosition() + p.getXVelocity() * 20, p.getYPosition() + p.getYVelocity() * 20, wall.getXPosition(), wall.getYPosition(), wall.getXPosition(), wall.getYPosition() + wall.getLength())) {
-                        if (wall.getXPosition() > 0) {
-                            return (wall.getXPosition() + wall.getLength() - p.getRadius() - p.getXPosition()) / p.getXVelocity();
-                        }
-                        return (wall.getXPosition() + wall.getLength() - p.getRadius() - p.getXPosition()) / p.getXVelocity();
-                    }
-                }
+    private void addTimeToWallCollisions(Particle p){
+        Double aux;
+        aux = timeToBottomWallCollision(p);
+        if(aux != null) {
+            collisions.add(new WallCollision(aux, p, new Wall(WallType.HORIZONTAL, 0, 0, 0)));
+        }
+        aux = timeToLeftWallCollision(p);
+        if(aux != null) {
+            collisions.add(new WallCollision(aux, p, new Wall(WallType.VERTICAL, 0, 0, 0)));
+        }
+        aux = timeToRightWallCollision(p);
+        if(aux != null) {
+            collisions.add(new WallCollision(aux, p, new Wall(WallType.VERTICAL, 0, 0, 0)));
+        }
+        aux = timeToTopWallCollision(p);
+        if(aux != null) {
+            collisions.add(new WallCollision(aux, p, new Wall(WallType.HORIZONTAL, 0, 0, 0)));
+        }
+    }
+
+    private Double timeToLeftWallCollision(Particle p) {
+        if(p.getXVelocity() > 0 ){
+            return null;
+        }
+        double timeToMiddle = (p.getRadius() - p.getXPosition() + SystemGenerator.xLength / 2) / p.getXVelocity();
+        double timeToBorder = (p.getRadius() - p.getXPosition()) / p.getXVelocity();
+        if(p.getXPosition() <= SystemGenerator.xLength / 2){
+            return timeToBorder;
+        }else{
+            double ypos = p.getYPosition() + p.getYVelocity()*timeToMiddle;
+            if(ypos > SystemGenerator.yLength / 2 + SystemGenerator.doorSize / 2 || ypos < SystemGenerator.yLength / 2 - SystemGenerator.doorSize / 2){
+                return timeToMiddle;
+            }else{
+                return timeToBorder;
             }
         }
-        return null;
+    }
+
+    private Double timeToRightWallCollision(Particle p) {
+        if(p.getXVelocity() < 0 ){
+            return null;
+        }
+        double timeToMiddle = (SystemGenerator.xLength / 2 - p.getRadius() - p.getXPosition()) / p.getXVelocity();
+        double timeToBorder = (SystemGenerator.xLength - p.getRadius() - p.getXPosition()) / p.getXVelocity();
+        if(p.getXPosition() <= SystemGenerator.xLength / 2){
+            double ypos = p.getYPosition() + p.getYVelocity()*timeToMiddle;
+            if(ypos > SystemGenerator.yLength / 2 + SystemGenerator.doorSize / 2 || ypos < SystemGenerator.yLength /2 - SystemGenerator.doorSize / 2){
+                return timeToMiddle;
+            }else{
+                return timeToBorder;
+            }
+        }else {
+            return timeToBorder;
+        }
+    }
+
+    private Double timeToTopWallCollision(Particle p) {
+        return (p.getYVelocity() > 0)? ( SystemGenerator.yLength - p.getRadius() - p.getYPosition()) / p.getYVelocity() : null;
+    }
+
+    private Double timeToBottomWallCollision(Particle p) {
+        return (p.getYVelocity() < 0)? (p.getRadius() - p.getYPosition()) / p.getYVelocity() : null;
     }
 }

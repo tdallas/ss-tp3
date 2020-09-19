@@ -11,7 +11,7 @@ public class Main {
     private static String filename;
     private static Long seed = null;
     private static double deltaTime;              //seconds
-    private static final double doorSize = 0.01;  //meters
+    private static final double doorSize = 0.03;  //meters
     private static final double xLength = 0.24;   //meters
     private static final double yLength = 0.09;   //meters
     private static final double mass = 1;         //kg
