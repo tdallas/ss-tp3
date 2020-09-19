@@ -8,7 +8,7 @@ public class EventDrivenSimulation {
     private int collisionsCount;
     private final List<Particle> particles;
     private final List<Wall> walls;
-    private final WallType.FileGenerator fileGenerator;
+    private final FileGenerator fileGenerator;
     private final double deltaTime;
     private double timePassed;
     private double nextSave;
@@ -19,7 +19,7 @@ public class EventDrivenSimulation {
         this.particles = particles;
         this.walls = walls;
         this.deltaTime = deltaTime;
-        this.fileGenerator = new WallType.FileGenerator(filename, particles, walls);
+        this.fileGenerator = new FileGenerator(filename, particles, walls);
         this.collisionsCount = 0;
         this.nextSave = deltaTime;
         this.collisions = new PriorityQueue<>();
