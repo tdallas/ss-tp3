@@ -1,5 +1,7 @@
 package engine;
 
+import system.FileGenerator;
+
 import java.awt.geom.Line2D;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -59,13 +61,13 @@ public class EventDrivenSimulation {
             for (int j = i + 1; j < particles.size(); j++) {
                 q = particles.get(j);
                 aux = timeToParticleCollision(p, q);
-                if (aux != null && aux > 0) {
+                if (aux != null) {
                     collisions.add(new ParticlesCollision(aux, p, q));
                 }
             }
             for (Wall wall : walls) {
                 aux = timeToWallCollision(p, wall);
-                if (aux != null && aux > 0) {
+                if (aux != null) {
                     collisions.add(new WallCollision(aux, p, wall));
                 }
             }
@@ -79,14 +81,14 @@ public class EventDrivenSimulation {
             for (Particle p : particles) {
                 if (!p.equals(q)) {
                     aux = timeToParticleCollision(p, q);
-                    if (aux != null && aux > 0) {
+                    if (aux != null) {
                         collisions.add(new ParticlesCollision(aux, p, q));
                     }
                 }
             }
             for (Wall wall : walls) {
                 aux = timeToWallCollision(q, wall);
-                if (aux != null && aux > 0) {
+                if (aux != null) {
                     collisions.add(new WallCollision(aux, q, wall));
                 }
             }

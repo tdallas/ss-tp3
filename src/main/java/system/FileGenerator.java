@@ -1,4 +1,8 @@
-package engine;
+package system;
+
+import engine.Particle;
+import engine.Wall;
+import engine.WallType;
 
 import java.io.BufferedWriter;
 import java.io.File;

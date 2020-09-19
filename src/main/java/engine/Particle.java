@@ -8,7 +8,6 @@ import java.util.Objects;
 
 @Setter
 @Getter
-@AllArgsConstructor
 public class Particle {
     private final int id;
     private double xPosition;
@@ -17,6 +16,22 @@ public class Particle {
     private double yVelocity;
     private final double radius;
     private final double mass;
+    private int collisions;
+
+    public Particle(int id, double xPosition, double yPosition, double xVelocity, double yVelocity, double radius, double mass) {
+        this.id = id;
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
+        this.xVelocity = xVelocity;
+        this.yVelocity = yVelocity;
+        this.radius = radius;
+        this.mass = mass;
+        this.collisions = 0;
+    }
+
+    public void addCollision(){
+        this.collisions++;
+    }
 
     public void evolveOverTime(double time) {
         xPosition = xPosition + xVelocity * time;

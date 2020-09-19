@@ -32,6 +32,8 @@ public class ParticlesCollision extends Collision {
         p.setYVelocity(p.getYVelocity() + newVelocity[1] / p.getMass());
         q.setXVelocity(q.getXVelocity() - newVelocity[0] / q.getMass());
         q.setYVelocity(q.getYVelocity() - newVelocity[1] / q.getMass());
+        p.addCollision();
+        q.addCollision();
     }
 
     @Override
