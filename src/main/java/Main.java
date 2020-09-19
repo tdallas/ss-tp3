@@ -20,6 +20,7 @@ public class Main {
     private static final double equilibriumPercentage = 0.10;
 
     public static void main(String[] args) {
+        long time;
         parseArguments(args);
         //Just in case testing is needed to have the same seed on everything (argument -s is optional)
         Random random;
@@ -34,8 +35,10 @@ public class Main {
         SystemGenerator systemGenerator = new SystemGenerator(random, doorSize, xLength, yLength, numberOfParticles, mass, radius, velocity);
         CutCondition equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
         EventDrivenSimulation eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition);
+        time = System.currentTimeMillis();
         eventDrivenSimulation.simulate();
-        System.out.println("Simulation finished.");
+        time = System.currentTimeMillis() - time;
+        System.out.println("Simulation finished in " + time + " mS.");
     }
 
     private static void parseArguments(String[] args) {
