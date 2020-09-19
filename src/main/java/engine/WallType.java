@@ -10,7 +10,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-public enum WallType {VERTICAL, HORIZONTAL;
+public enum WallType {
+    VERTICAL, HORIZONTAL;
 
     public static class FileGenerator {
         private static final double WALLS_RADIUS = 0.0001;
@@ -64,21 +65,20 @@ public enum WallType {VERTICAL, HORIZONTAL;
                 pw = new FileWriter("out/walls.xyz", true);
                 BufferedWriter bw = new BufferedWriter(pw);
 
-                bw.write("x y (radius " + WALLS_RADIUS +")\n");
-                for(Wall wall : walls){
+                bw.write("x y (radius " + WALLS_RADIUS + ")\n");
+                for (Wall wall : walls) {
                     x = wall.getXPosition();
                     y = wall.getYPosition();
-                    if(wall.getWallType() == HORIZONTAL){
+                    if (wall.getWallType() == HORIZONTAL) {
                         length = wall.getXPosition() + wall.getLength();
-                        while(x < length){
+                        while (x < length) {
                             bw.write(x + " " + y + "\n");
                             n++;
                             x += WALLS_RADIUS;
                         }
-                    }
-                    else{
+                    } else {
                         length = wall.getYPosition() + wall.getLength();
-                        while(y < length){
+                        while (y < length) {
                             bw.write(x + " " + y + "\n");
                             n++;
                             y += WALLS_RADIUS;

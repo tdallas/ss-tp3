@@ -72,12 +72,12 @@ public class EventDrivenSimulation {
         }
     }
 
-    public void refillQueue(Collision collision){
+    public void refillQueue(Collision collision) {
         Double aux;
         collisions.removeIf(h -> h.containsParticles(collision.getCollisionParticles()));
-        for(Particle q : collision.getCollisionParticles()){
-            for(Particle p : particles){
-                if(!p.equals(q)) {
+        for (Particle q : collision.getCollisionParticles()) {
+            for (Particle p : particles) {
+                if (!p.equals(q)) {
                     aux = timeToParticleCollision(p, q);
                     if (aux != null && aux > 0) {
                         collisions.add(new ParticlesCollision(aux, p, q));
@@ -98,12 +98,10 @@ public class EventDrivenSimulation {
         double[] deltaV = new double[]{q.getXVelocity() - p.getXVelocity(), q.getYVelocity() - p.getYVelocity()};
         double deltaVR = deltaV[0] * deltaR[0] + deltaV[1] * deltaR[1];
 
-        //caso 1
         if (deltaVR >= 0) {
             return null;
         }
 
-        //caso 2
         double deltaRadius = p.getRadius() + q.getRadius();
         double deltaVSquared = deltaV[0] * deltaV[0] + deltaV[1] * deltaV[1];
         double deltaRSquared = deltaR[0] * deltaR[0] + deltaR[1] * deltaR[1];
@@ -112,35 +110,35 @@ public class EventDrivenSimulation {
             return null;
         }
 
-        //caso 3
         return -((deltaVR + Math.sqrt(d)) / deltaVSquared);
     }
 
+    //ESTA FUNCION ESTA MAL CREO QUE ARREGLANDOLA DEBERIA FUNCIONAR LA SIMULACION
     private Double timeToWallCollision(Particle p, Wall wall) {
         if (wall.getWallType() == WallType.HORIZONTAL) {
             if (p.getYVelocity() > 0) {
                 if (p.getYPosition() < wall.getYPosition()) {
-                    return (wall.getYPosition() - p.getRadius() - p.getYPosition()) / p.getYVelocity();
+                    return (wall.getYPosition() + wall.getLength() - p.getRadius() - p.getYPosition()) / p.getYVelocity();
                 }
             } else {
                 if (p.getYPosition() > wall.getYPosition()) {
-                    return (p.getRadius() - p.getYPosition()) / p.getYVelocity();
+                    return (wall.getYPosition() + wall.getLength() - p.getRadius() - p.getYPosition()) / p.getYVelocity();
                 }
             }
         } else {
             if (p.getXVelocity() > 0) {
                 if (p.getXPosition() < wall.getXPosition()) {
-                    if (Line2D.linesIntersect(p.getXPosition(), p.getYPosition(), p.getXPosition() + p.getXVelocity()*20, p.getYPosition() + p.getYVelocity()*20, wall.getXPosition(), wall.getYPosition(), wall.getXPosition(), wall.getYPosition() + wall.getLength())) {
-                        return (wall.getXPosition() - p.getRadius() - p.getXPosition()) / p.getXVelocity();
+                    if (Line2D.linesIntersect(p.getXPosition(), p.getYPosition(), p.getXPosition() + p.getXVelocity() * 20, p.getYPosition() + p.getYVelocity() * 20, wall.getXPosition(), wall.getYPosition(), wall.getXPosition(), wall.getYPosition() + wall.getLength())) {
+                        return (wall.getXPosition() + wall.getLength() - p.getRadius() - p.getXPosition()) / p.getXVelocity();
                     }
                 }
             } else {
                 if (p.getXPosition() > wall.getXPosition()) {
-                    if (Line2D.linesIntersect(p.getXPosition(), p.getYPosition(), p.getXPosition() + p.getXVelocity()*20, p.getYPosition() + p.getYVelocity()*20, wall.getXPosition(), wall.getYPosition(), wall.getXPosition(), wall.getYPosition() + wall.getLength())) {
-                        if(wall.getXPosition() > 0){
-                            return (wall.getXPosition() - p.getRadius() - p.getXPosition()) / p.getXVelocity();
+                    if (Line2D.linesIntersect(p.getXPosition(), p.getYPosition(), p.getXPosition() + p.getXVelocity() * 20, p.getYPosition() + p.getYVelocity() * 20, wall.getXPosition(), wall.getYPosition(), wall.getXPosition(), wall.getYPosition() + wall.getLength())) {
+                        if (wall.getXPosition() > 0) {
+                            return (wall.getXPosition() + wall.getLength() - p.getRadius() - p.getXPosition()) / p.getXVelocity();
                         }
-                        return (p.getRadius() - p.getXPosition()) / p.getXVelocity();
+                        return (wall.getXPosition() + wall.getLength() - p.getRadius() - p.getXPosition()) / p.getXVelocity();
                     }
                 }
             }
