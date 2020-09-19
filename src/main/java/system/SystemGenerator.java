@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ParticlesGenerator {
+public class SystemGenerator {
     private final Random rand;
     private final List<Particle> particles;
     private final List<Wall> walls;
@@ -23,7 +23,7 @@ public class ParticlesGenerator {
 
     private static final int ALLOWED_ATTEMPTS = 30;
 
-    public ParticlesGenerator(Random random, double doorSize, double xLength, double yLength, int quantity, double mass, double radius, double velocity) {
+    public SystemGenerator(Random random, double doorSize, double xLength, double yLength, int quantity, double mass, double radius, double velocity) {
         this.rand = random;
         this.doorSize = doorSize;
         this.radius = radius;

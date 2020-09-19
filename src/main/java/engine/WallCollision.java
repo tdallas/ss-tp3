@@ -1,6 +1,5 @@
 package engine;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -31,8 +30,8 @@ public class WallCollision extends Collision {
 
     @Override
     public boolean containsParticles(List<Particle> particles) {
-        for(Particle p : particles){
-            if(p.equals(particle)){
+        for (Particle p : particles) {
+            if (p.equals(particle)) {
                 return true;
             }
         }

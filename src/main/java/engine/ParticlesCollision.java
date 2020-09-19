@@ -41,8 +41,8 @@ public class ParticlesCollision extends Collision {
 
     @Override
     public boolean containsParticles(List<Particle> particles) {
-        for(Particle particle : particles){
-            if(particle.equals(p) || particle.equals(q)){
+        for (Particle particle : particles) {
+            if (particle.equals(p) || particle.equals(q)) {
                 return true;
             }
         }

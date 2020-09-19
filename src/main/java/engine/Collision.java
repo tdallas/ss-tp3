@@ -14,6 +14,8 @@ public abstract class Collision implements Comparable<Collision> {
     }
 
     public abstract void collide();
+
     public abstract List<Particle> getCollisionParticles();
+
     public abstract boolean containsParticles(List<Particle> particles);
 }

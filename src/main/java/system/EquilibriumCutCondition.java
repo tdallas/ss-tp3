@@ -18,7 +18,7 @@ public class EquilibriumCutCondition implements CutCondition {
     public EquilibriumCutCondition(List<Particle> particles, double xLength, double percentage) {
         this.particles = particles;
         this.xLength = xLength;
-        this.balanceLimit = (int)(particles.size() * percentage);
+        this.balanceLimit = (int) (particles.size() * percentage);
         calculateParticlesOnSides();
     }
 
@@ -28,14 +28,13 @@ public class EquilibriumCutCondition implements CutCondition {
         return Math.abs(particlesOnLeft - particlesOnRight) < balanceLimit;
     }
 
-    private void calculateParticlesOnSides(){
+    private void calculateParticlesOnSides() {
         particlesOnLeft = 0;
         particlesOnRight = 0;
-        for(Particle p : particles){
-            if(p.getXPosition() < xLength / 2){
+        for (Particle p : particles) {
+            if (p.getXPosition() < xLength / 2) {
                 particlesOnLeft++;
-            }
-            else{
+            } else {
                 particlesOnRight++;
             }
         }

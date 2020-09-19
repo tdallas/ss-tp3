@@ -1,7 +1,5 @@
 package engine;
 
-import system.FileGenerator;
-
 import java.awt.geom.Line2D;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -10,7 +8,7 @@ public class EventDrivenSimulation {
     private int collisionsCount;
     private final List<Particle> particles;
     private final List<Wall> walls;
-    private final FileGenerator fileGenerator;
+    private final WallType.FileGenerator fileGenerator;
     private final double deltaTime;
     private double timePassed;
     private double nextSave;
@@ -21,7 +19,7 @@ public class EventDrivenSimulation {
         this.particles = particles;
         this.walls = walls;
         this.deltaTime = deltaTime;
-        this.fileGenerator = new FileGenerator(filename);
+        this.fileGenerator = new WallType.FileGenerator(filename, particles, walls);
         this.collisionsCount = 0;
         this.nextSave = deltaTime;
         this.collisions = new PriorityQueue<>();
@@ -43,14 +41,13 @@ public class EventDrivenSimulation {
             timePassed += collision.getTimeToCollision();
             if (timePassed >= nextSave) {
                 nextSave += deltaTime;
-                //TODO
-                fileGenerator.addToFile();
+                fileGenerator.addToFile(particles);
             }
 
             collision.collide();
             refillQueue(collision);
         }
-        System.out.println("Finished");
+        fileGenerator.closeFile();
     }
 
     private void fillQueue() {
@@ -62,7 +59,7 @@ public class EventDrivenSimulation {
             for (int j = i + 1; j < particles.size(); j++) {
                 q = particles.get(j);
                 aux = timeToParticleCollision(p, q);
-                if (aux != null && aux > 0.0001) {
+                if (aux != null && aux > 0) {
                     collisions.add(new ParticlesCollision(aux, p, q));
                 }
             }
@@ -82,7 +79,7 @@ public class EventDrivenSimulation {
             for(Particle p : particles){
                 if(!p.equals(q)) {
                     aux = timeToParticleCollision(p, q);
-                    if (aux != null && aux > 0.0001) {
+                    if (aux != null && aux > 0) {
                         collisions.add(new ParticlesCollision(aux, p, q));
                     }
                 }

@@ -2,7 +2,7 @@ import engine.CutCondition;
 import engine.EventDrivenSimulation;
 import org.apache.commons.cli.*;
 import system.EquilibriumCutCondition;
-import system.ParticlesGenerator;
+import system.SystemGenerator;
 
 import java.util.Random;
 
@@ -30,11 +30,12 @@ public class Main {
         } else {
             random = new Random(seed);
         }
-
-        ParticlesGenerator particlesGenerator = new ParticlesGenerator(random, doorSize, xLength, yLength, numberOfParticles, mass, radius, velocity);
-        CutCondition equilibriumCutCondition = new EquilibriumCutCondition(particlesGenerator.getParticles(), xLength, equilibriumPercentage);
-        EventDrivenSimulation eventDrivenSimulation = new EventDrivenSimulation(particlesGenerator.getParticles(), particlesGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition);
+        System.out.println("Seed: " + seed);
+        SystemGenerator systemGenerator = new SystemGenerator(random, doorSize, xLength, yLength, numberOfParticles, mass, radius, velocity);
+        CutCondition equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
+        EventDrivenSimulation eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition);
         eventDrivenSimulation.simulate();
+        System.out.println("Simulation finished.");
     }
 
     private static void parseArguments(String[] args) {
