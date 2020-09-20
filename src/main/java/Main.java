@@ -17,7 +17,7 @@ public class Main {
     private static final double mass = 1;         //kg
     private static final double radius = 0.0015;  //meters
     private static final double velocity = 0.01;  //meters per second
-    private static final double equilibriumPercentage = 0.05;
+    private static final double equilibriumPercentage = 0.01;
 
     public static void main(String[] args) {
         long time;
@@ -38,12 +38,12 @@ public class Main {
         EventDrivenSimulation eventDrivenSimulation;
 
         if (doorSize != null) {
-            //With partition and doorSize
+            //With partition and doorSize (con tabique)
             systemGenerator = new SystemGenerator(random, doorSize, xLength, yLength, numberOfParticles, mass, radius, velocity);
             equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
             eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength, doorSize);
         } else {
-            //Without partition
+            //Without partition (sin tabique)
             systemGenerator = new SystemGenerator(random, xLength, yLength, numberOfParticles, mass, radius, velocity);
             equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
             eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength);
