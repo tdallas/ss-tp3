@@ -16,22 +16,26 @@ public class ParticlesCollision extends Collision {
 
     @Override
     public void collide() {
-        double[] deltaR, deltaV, newVelocity;
-        double deltaVR, deltaRadius, j;
+        double xDeltaR, yDeltaR, xDeltaV, yDeltaV, deltaVR, deltaRadius, j, xNewVelocity, yNewVelocity;
 
-        deltaR = new double[]{q.getXPosition() - p.getXPosition(), q.getYPosition() - p.getYPosition()};
-        deltaV = new double[]{q.getXVelocity() - p.getXVelocity(), q.getYVelocity() - p.getYVelocity()};
+        xDeltaR = q.getXPosition() - p.getXPosition();
+        yDeltaR = q.getYPosition() - p.getYPosition();
+        xDeltaV = q.getXVelocity() - p.getXVelocity();
+        yDeltaV = q.getYVelocity() - p.getYVelocity();
 
-        deltaVR = deltaV[0] * deltaR[0] + deltaV[1] * deltaR[1];
+        deltaVR = xDeltaV * xDeltaR + yDeltaV * yDeltaR;
         deltaRadius = p.getRadius() + q.getRadius();
 
         j = (2 * p.getMass() * q.getMass() * deltaVR) / (deltaRadius * (p.getMass() + q.getMass()));
 
-        newVelocity = new double[]{j * deltaR[0] / deltaRadius, j * deltaR[1] / deltaRadius};
-        p.setXVelocity(p.getXVelocity() + newVelocity[0] / p.getMass());
-        p.setYVelocity(p.getYVelocity() + newVelocity[1] / p.getMass());
-        q.setXVelocity(q.getXVelocity() - newVelocity[0] / q.getMass());
-        q.setYVelocity(q.getYVelocity() - newVelocity[1] / q.getMass());
+        xNewVelocity = j * xDeltaR / deltaRadius;
+        yNewVelocity = j * yDeltaR / deltaRadius;
+
+        p.setXVelocity(p.getXVelocity() + xNewVelocity / p.getMass());
+        p.setYVelocity(p.getYVelocity() + yNewVelocity / p.getMass());
+        q.setXVelocity(q.getXVelocity() - xNewVelocity / q.getMass());
+        q.setYVelocity(q.getYVelocity() - yNewVelocity / q.getMass());
+
         p.addCollision();
         q.addCollision();
     }

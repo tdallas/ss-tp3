@@ -6,17 +6,17 @@ import java.util.Objects;
 
 public class WallCollision extends Collision {
     private final Particle particle;
-    private final Wall wall;
+    private final WallType wallType;
 
-    public WallCollision(double timeToCollision, Particle particle, Wall wall) {
+    public WallCollision(double timeToCollision, Particle particle, WallType wallType) {
         super(timeToCollision);
         this.particle = particle;
-        this.wall = wall;
+        this.wallType = wallType;
     }
 
     @Override
     public void collide() {
-        if (wall.getWallType() == WallType.HORIZONTAL) {
+        if (wallType == WallType.HORIZONTAL) {
             particle.setYVelocity(-particle.getYVelocity());
         } else {
             particle.setXVelocity(-particle.getXVelocity());
@@ -55,11 +55,11 @@ public class WallCollision extends Collision {
         if (o == null || getClass() != o.getClass()) return false;
         WallCollision that = (WallCollision) o;
         return Objects.equals(particle, that.particle) &&
-                Objects.equals(wall, that.wall);
+                wallType == that.wallType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(particle, wall);
+        return Objects.hash(particle, wallType);
     }
 }

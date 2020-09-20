@@ -12,14 +12,15 @@ public class SystemGenerator {
     private final Random rand;
     private final List<Particle> particles;
     private final List<Wall> walls;
-    public static double xLength;
-    public static double yLength;
-    public static double doorSize;
+    private final double xLength;
+    private final double yLength;
+    private final double doorSize;
     private final double velocity;
     private double quantity;
     private final double radius;
     private int idCounter;
     private final double mass;
+    private final boolean hasPartition;
 
     private static final int ALLOWED_ATTEMPTS = 30;
 
@@ -28,6 +29,24 @@ public class SystemGenerator {
         this.xLength = xLength;
         this.yLength = yLength;
         this.doorSize = doorSize;
+        this.hasPartition = true;
+        this.quantity = quantity;
+        this.radius = radius;
+        this.velocity = velocity;
+        this.idCounter = 0;
+        this.mass = mass;
+        this.particles = new ArrayList<>();
+        this.walls = new ArrayList<>();
+        generateRandomParticles();
+        generateWalls();
+    }
+
+    public SystemGenerator(Random random, double xLength, double yLength, int quantity, double mass, double radius, double velocity) {
+        this.rand = random;
+        this.xLength = xLength;
+        this.yLength = yLength;
+        this.doorSize = 0;
+        this.hasPartition = false;
         this.quantity = quantity;
         this.radius = radius;
         this.velocity = velocity;
@@ -44,9 +63,11 @@ public class SystemGenerator {
         walls.add(new Wall(WallType.HORIZONTAL, 0, yLength, xLength));
         walls.add(new Wall(WallType.VERTICAL, 0, 0, yLength));
         walls.add(new Wall(WallType.VERTICAL, xLength, 0, yLength));
-        double length = (yLength - doorSize) / 2;
-        walls.add(new Wall(WallType.VERTICAL, xLength / 2, 0, length));
-        walls.add(new Wall(WallType.VERTICAL, xLength / 2, length + doorSize, length));
+        if (hasPartition) {
+            double length = (yLength - doorSize) / 2;
+            walls.add(new Wall(WallType.VERTICAL, xLength / 2, 0, length));
+            walls.add(new Wall(WallType.VERTICAL, xLength / 2, length + doorSize, length));
+        }
     }
 
     private void generateRandomParticles() {

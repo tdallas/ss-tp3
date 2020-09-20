@@ -11,18 +11,18 @@ public class Main {
     private static String filename;
     private static Long seed = null;
     private static double deltaTime;              //seconds
-    private static final double doorSize = 0.03;  //meters
+    private static Double doorSize;               //meters
     private static final double xLength = 0.24;   //meters
     private static final double yLength = 0.09;   //meters
     private static final double mass = 1;         //kg
     private static final double radius = 0.0015;  //meters
     private static final double velocity = 0.01;  //meters per second
-    private static final double equilibriumPercentage = 0.10;
+    private static final double equilibriumPercentage = 0.05;
 
     public static void main(String[] args) {
         long time;
         parseArguments(args);
-        //Just in case testing is needed to have the same seed on everything (argument -s is optional)
+
         Random random;
         if (seed == null) {
             random = new Random();
@@ -32,13 +32,28 @@ public class Main {
             random = new Random(seed);
         }
         System.out.println("Seed: " + seed);
-        SystemGenerator systemGenerator = new SystemGenerator(random, doorSize, xLength, yLength, numberOfParticles, mass, radius, velocity);
-        CutCondition equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
-        EventDrivenSimulation eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition);
+
+        SystemGenerator systemGenerator;
+        CutCondition equilibriumCutCondition;
+        EventDrivenSimulation eventDrivenSimulation;
+
+        if (doorSize != null) {
+            //With partition and doorSize
+            systemGenerator = new SystemGenerator(random, doorSize, xLength, yLength, numberOfParticles, mass, radius, velocity);
+            equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
+            eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength, doorSize);
+        } else {
+            //Without partition
+            systemGenerator = new SystemGenerator(random, xLength, yLength, numberOfParticles, mass, radius, velocity);
+            equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
+            eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength);
+        }
+
         time = System.currentTimeMillis();
         eventDrivenSimulation.simulate();
         time = System.currentTimeMillis() - time;
-        System.out.println("Simulation finished in " + time + " mS.");
+
+        System.out.println("Simulation finished in " + time + " ms.");
     }
 
     private static void parseArguments(String[] args) {
@@ -55,6 +70,10 @@ public class Main {
         Option deltaTimeOption = new Option("dt", "time-delta", true, "time delta for animations");
         deltaTimeOption.setRequired(true);
         options.addOption(deltaTimeOption);
+
+        Option partitionOption = new Option("p", "partition-size", true, "size of the door in the middle partition (optional)");
+        partitionOption.setRequired(false);
+        options.addOption(partitionOption);
 
         Option seedOption = new Option("s", "seed", true, "seed for randomizer (optional)");
         seedOption.setRequired(false);
@@ -101,7 +120,23 @@ public class Main {
             System.exit(1);
         }
 
-        String aux = cmd.getOptionValue("seed");
+        String aux = cmd.getOptionValue("partition-size");
+        if (aux != null) {
+            try {
+                doorSize = Double.parseDouble(aux);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid argument partition door size, must be doubl");
+                System.exit(1);
+            }
+            if (doorSize <= 0 || doorSize >= yLength) {
+                System.out.println("Invalid argument partition door size, must be positive lower than " + yLength);
+                System.exit(1);
+            }
+        } else {
+            doorSize = null;
+        }
+
+        aux = cmd.getOptionValue("seed");
         if (aux != null) {
             try {
                 seed = Long.parseLong(aux);

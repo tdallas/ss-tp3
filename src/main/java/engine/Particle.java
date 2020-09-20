@@ -1,6 +1,5 @@
 package engine;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,7 +28,7 @@ public class Particle {
         this.collisions = 0;
     }
 
-    public void addCollision(){
+    public void addCollision() {
         this.collisions++;
     }
 

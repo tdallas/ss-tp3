@@ -34,15 +34,22 @@ public class FileGenerator {
         }
         this.bw = new BufferedWriter(fw);
         writeWall(walls);
-        addToFile(particles);
     }
 
-    public void addToFile(List<Particle> particles) {
+    public void addToFile(List<Particle> particles, EquilibriumCutCondition cutCondition) {
+        double leftColorB = 1 - (double) cutCondition.getParticlesOnLeft() / (double) particles.size();
+        double leftColorR = 1 - leftColorB;
+        double rightColorB = 1 - (double) cutCondition.getParticlesOnRight() / (double) particles.size();
+        double rightColorR = 1 - rightColorB;
         try {
             bw.write(particles.size() + "\n");
-            bw.write("id xPos yPos xVel yVel radius \n");
+            bw.write("id xPos yPos xVel yVel radius redColor blueColor\n");
             for (Particle particle : particles) {
-                bw.write(particle.getId() + " " + particle.getXPosition() + " " + particle.getYPosition() + " " + particle.getXVelocity() + " " + particle.getYVelocity() + " " + particle.getRadius() + "\n");
+                if (particle.getXPosition() < cutCondition.getXLength() / 2) {
+                    bw.write(particle.getId() + " " + particle.getXPosition() + " " + particle.getYPosition() + " " + particle.getXVelocity() + " " + particle.getYVelocity() + " " + particle.getRadius() + " " + leftColorR + " " + leftColorB + "\n");
+                } else {
+                    bw.write(particle.getId() + " " + particle.getXPosition() + " " + particle.getYPosition() + " " + particle.getXVelocity() + " " + particle.getYVelocity() + " " + particle.getRadius() + " " + rightColorR + " " + rightColorB + "\n");
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -66,7 +73,7 @@ public class FileGenerator {
             pw = new FileWriter("out/walls.xyz", true);
             BufferedWriter bw = new BufferedWriter(pw);
 
-            bw.write("x y (radius " + WALLS_RADIUS + ")\n");
+            bw.write("xPos yPos (radius " + WALLS_RADIUS + ")\n");
             for (Wall wall : walls) {
                 x = wall.getXPosition();
                 y = wall.getYPosition();
