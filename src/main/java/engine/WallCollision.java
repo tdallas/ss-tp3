@@ -39,6 +39,10 @@ public class WallCollision extends Collision {
         return false;
     }
 
+    public Particle getParticle() {
+        return particle;
+    }
+
     @Override
     public int compareTo(Collision c) {
         if (getTimeToCollision() > c.getTimeToCollision()) {
@@ -61,5 +65,9 @@ public class WallCollision extends Collision {
     @Override
     public int hashCode() {
         return Objects.hash(particle, wallType);
+    }
+
+    public WallType getWallType() {
+        return wallType;
     }
 }

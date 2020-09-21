@@ -20,3 +20,4 @@ public abstract class Collision implements Comparable<Collision> {
 
     public abstract boolean containsParticles(List<Particle> particles);
 }
+

@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 public class EventDrivenSimulation {
+
+    private final double boxArea = 0.24 * 0.09;
+    private final static double WALL_VOLUME = (0.24 * 2) + (0.09 * 3) - 0.01;
+
     private int collisionsCount;
     private final List<Particle> particles;
     private final List<Wall> walls;
@@ -20,6 +24,9 @@ public class EventDrivenSimulation {
     private final double yLength;
     private final double doorSize;
     private final boolean hasPartition;
+
+    private double impulseToWalls = 0;
+    private int iterations = 0;
 
     public EventDrivenSimulation(List<Particle> particles, List<Wall> walls, double deltaTime, String filename, CutCondition cutCondition, double xLength, double yLength, double doorSize) {
         this.particles = particles;
@@ -69,6 +76,7 @@ public class EventDrivenSimulation {
         Collision collision;
         fillQueue();
         while (!cutCondition.isFinished() && !collisions.isEmpty()) {
+            iterations++;
             collision = collisions.poll();
 
             if (timePassed >= nextSave) {
@@ -88,6 +96,10 @@ public class EventDrivenSimulation {
             collision.collide();
             refillQueue(collision);
         }
+        System.out.println("Impulso: " + impulseToWalls);
+        System.out.println("Impulso cada dt: " + (impulseToWalls / iterations));
+        System.out.println("Impulso cada dt y cada metro: " + (impulseToWalls / iterations / WALL_VOLUME));
+        System.out.println("P * V = " + (impulseToWalls / iterations / WALL_VOLUME) * boxArea);
         fileGenerator.closeFile();
     }
 
@@ -152,19 +164,28 @@ public class EventDrivenSimulation {
         Double aux;
         aux = timeToBottomWallCollision(p);
         if (aux != null) {
-            collisions.add(new WallCollision(aux, p, WallType.HORIZONTAL));
+            insertParticleToWallCollision(new WallCollision(aux, p, WallType.HORIZONTAL));
         }
         aux = timeToTopWallCollision(p);
         if (aux != null) {
-            collisions.add(new WallCollision(aux, p, WallType.HORIZONTAL));
+            insertParticleToWallCollision(new WallCollision(aux, p, WallType.HORIZONTAL));
         }
         aux = timeToLeftWallCollision(p);
         if (aux != null) {
-            collisions.add(new WallCollision(aux, p, WallType.VERTICAL));
+            insertParticleToWallCollision(new WallCollision(aux, p, WallType.VERTICAL));
         }
         aux = timeToRightWallCollision(p);
         if (aux != null) {
-            collisions.add(new WallCollision(aux, p, WallType.VERTICAL));
+            insertParticleToWallCollision(new WallCollision(aux, p, WallType.VERTICAL));
+        }
+    }
+
+    private void insertParticleToWallCollision(final WallCollision wallCollision) {
+        collisions.add(wallCollision);
+        if (wallCollision.getWallType().equals(WallType.HORIZONTAL)) {
+            impulseToWalls += wallCollision.getParticle().getXVelocity() * 2;
+        } else {
+            impulseToWalls += wallCollision.getParticle().getYPosition() * 2;
         }
     }
 
