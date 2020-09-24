@@ -3,6 +3,7 @@ package engine;
 import system.CsvFileGenerator;
 import system.EquilibriumCutCondition;
 import system.FileGenerator;
+import system.SystemGenerator;
 
 import java.util.List;
 import java.util.PriorityQueue;
@@ -83,7 +84,7 @@ public class EventDrivenSimulation {
             if(csvFileGenerator == null) {
                 if (timePassed >= nextSave) {
                     nextSave += deltaTime;
-                    fileGenerator.addToFile(particles, (EquilibriumCutCondition) cutCondition);
+                    fileGenerator.addToFile(particles, (EquilibriumCutCondition) cutCondition, timePassed);
                 }
             }
             timePassed += collision.getTimeToCollision();
@@ -113,7 +114,7 @@ public class EventDrivenSimulation {
             for (int j = i + 1; j < particles.size(); j++) {
                 q = particles.get(j);
                 aux = timeToParticleCollision(p, q);
-                if (aux != null) {
+                if (aux != null && aux > 0) {
                     collisions.add(new ParticlesCollision(aux, p, q));
                 }
             }
@@ -134,7 +135,7 @@ public class EventDrivenSimulation {
             for (Particle p : particles) {
                 if (!p.equals(q)) {
                     aux = timeToParticleCollision(p, q);
-                    if (aux != null) {
+                    if (aux != null && aux > 0) {
                         collisions.add(new ParticlesCollision(aux, p, q));
                     }
                 }
@@ -170,19 +171,19 @@ public class EventDrivenSimulation {
     private void addTimeToWallCollisions(Particle p) {
         Double aux;
         aux = timeToBottomWallCollision(p);
-        if (aux != null) {
+        if (aux != null && aux > 0) {
             collisions.add(new WallCollision(aux, p, WallType.HORIZONTAL));
         }
         aux = timeToTopWallCollision(p);
-        if (aux != null) {
+        if (aux != null && aux > 0) {
             collisions.add(new WallCollision(aux, p, WallType.HORIZONTAL));
         }
         aux = timeToLeftWallCollision(p);
-        if (aux != null) {
+        if (aux != null && aux > 0) {
             collisions.add(new WallCollision(aux, p, WallType.VERTICAL));
         }
         aux = timeToRightWallCollision(p);
-        if (aux != null) {
+        if (aux != null && aux > 0) {
             collisions.add(new WallCollision(aux, p, WallType.VERTICAL));
         }
     }

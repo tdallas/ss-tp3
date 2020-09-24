@@ -36,7 +36,7 @@ public class FileGenerator {
         writeWall(walls, filename);
     }
 
-    public void addToFile(List<Particle> particles, EquilibriumCutCondition cutCondition) {
+    public void addToFile(List<Particle> particles, EquilibriumCutCondition cutCondition, double timePassed) {
         double leftColorB = 1 - (double) cutCondition.getParticlesOnLeft() / (double) particles.size();
         double leftColorR = 1 - leftColorB;
         double rightColorB = 1 - (double) cutCondition.getParticlesOnRight() / (double) particles.size();
@@ -50,7 +50,7 @@ public class FileGenerator {
         }
         try {
             bw.write(particles.size() + "\n");
-            bw.write("id xPosition yPosition xVelocity yVelocity radius redColor blueColor mass wallCollision equilibrium\n");
+            bw.write("id xPosition yPosition xVelocity yVelocity radius redColor blueColor mass wallCollision equilibrium timePassed\n");
             for (Particle particle : particles) {
                 if (particle.getXPosition() < cutCondition.getXLength() / 2) {
                     bw.write(particle.getId() + " " +
@@ -63,7 +63,8 @@ public class FileGenerator {
                             leftColorB + " " +
                             particle.getMass() + " " +
                             particle.lastWallCollision() + " " +
-                            equilibrium +
+                            equilibrium + " " +
+                            timePassed +
                             "\n");
                 } else {
                     bw.write(particle.getId() + " " +
@@ -76,7 +77,8 @@ public class FileGenerator {
                             rightColorB + " " +
                             particle.getMass() + " " +
                             particle.lastWallCollision() + " " +
-                            equilibrium +
+                            equilibrium + " " +
+                            timePassed +
                             "\n");
                 }
             }
