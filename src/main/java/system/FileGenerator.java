@@ -41,9 +41,16 @@ public class FileGenerator {
         double leftColorR = 1 - leftColorB;
         double rightColorB = 1 - (double) cutCondition.getParticlesOnRight() / (double) particles.size();
         double rightColorR = 1 - rightColorB;
+        String equilibrium;
+        if(cutCondition.isAfterEquilibrium()){
+            equilibrium = "n";
+        }
+        else{
+            equilibrium = "y";
+        }
         try {
             bw.write(particles.size() + "\n");
-            bw.write("id xPosition yPosition xVelocity yVelocity radius redColor blueColor mass wallCollision\n");
+            bw.write("id xPosition yPosition xVelocity yVelocity radius redColor blueColor mass wallCollision equilibrium\n");
             for (Particle particle : particles) {
                 if (particle.getXPosition() < cutCondition.getXLength() / 2) {
                     bw.write(particle.getId() + " " +
@@ -55,7 +62,8 @@ public class FileGenerator {
                             leftColorR + " " +
                             leftColorB + " " +
                             particle.getMass() + " " +
-                            particle.lastWallCollision() +
+                            particle.lastWallCollision() + " " +
+                            equilibrium +
                             "\n");
                 } else {
                     bw.write(particle.getId() + " " +
@@ -67,7 +75,8 @@ public class FileGenerator {
                             rightColorR + " " +
                             rightColorB + " " +
                             particle.getMass() + " " +
-                            particle.lastWallCollision() +
+                            particle.lastWallCollision() + " " +
+                            equilibrium +
                             "\n");
                 }
             }

@@ -1,5 +1,6 @@
 package engine;
 
 public interface CutCondition {
-    boolean isFinished();
+    boolean isFinished(double time);
+    boolean isAfterEquilibrium();
 }

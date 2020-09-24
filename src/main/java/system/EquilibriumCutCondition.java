@@ -23,9 +23,14 @@ public class EquilibriumCutCondition implements CutCondition {
     }
 
     @Override
-    public boolean isFinished() {
+    public boolean isFinished(double time) {
         calculateParticlesOnSides();
         return Math.abs(particlesOnLeft - particlesOnRight) < balanceLimit;
+    }
+
+    @Override
+    public boolean isAfterEquilibrium() {
+        return false;
     }
 
     private void calculateParticlesOnSides() {

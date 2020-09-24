@@ -2,6 +2,7 @@ import engine.CutCondition;
 import engine.EventDrivenSimulation;
 import org.apache.commons.cli.*;
 import system.EquilibriumCutCondition;
+import system.GasesLawEquilibriumCutCondition;
 import system.SystemGenerator;
 
 import java.util.Random;
@@ -12,12 +13,14 @@ public class Main {
     private static Long seed = null;
     private static double deltaTime;              //seconds
     private static Double doorSize;               //meters
+    private static Double timeAfterEquilibrium = null; //seconds
     private static final double xLength = 0.24;   //meters
     private static final double yLength = 0.09;   //meters
     private static final double mass = 1;         //kg
     private static final double radius = 0.0015;  //meters
     private static final double velocity = 0.01;  //meters per second
     private static final double equilibriumPercentage = 0.01;
+
 
     public static void main(String[] args) {
         long time;
@@ -40,12 +43,22 @@ public class Main {
         if (doorSize != null) {
             //With partition and doorSize (con tabique)
             systemGenerator = new SystemGenerator(random, doorSize, xLength, yLength, numberOfParticles, mass, radius, velocity);
-            equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
+            if(timeAfterEquilibrium == null) {
+                equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
+            }
+            else{
+                equilibriumCutCondition = new GasesLawEquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage, timeAfterEquilibrium);
+            }
             eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength, doorSize);
         } else {
             //Without partition (sin tabique)
             systemGenerator = new SystemGenerator(random, xLength, yLength, numberOfParticles, mass, radius, velocity);
-            equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
+            if(timeAfterEquilibrium == null) {
+                equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
+            }
+            else{
+                equilibriumCutCondition = new GasesLawEquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage, timeAfterEquilibrium);
+            }
             eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength);
         }
 
@@ -78,6 +91,10 @@ public class Main {
         Option seedOption = new Option("s", "seed", true, "seed for randomizer (optional)");
         seedOption.setRequired(false);
         options.addOption(seedOption);
+
+        Option timeAfterEquilibriumOption = new Option("t", "time-after-equilibrium", true, "time after equilibrium to test ideal gases law (optional)");
+        timeAfterEquilibriumOption.setRequired(false);
+        options.addOption(timeAfterEquilibriumOption);
 
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -120,12 +137,28 @@ public class Main {
             System.exit(1);
         }
 
-        String aux = cmd.getOptionValue("partition-size");
+        String aux = cmd.getOptionValue("time-after-equilibrium");
+        if (aux != null) {
+            try {
+                timeAfterEquilibrium = Double.parseDouble(aux);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid argument time after equilibrium, must be double");
+                System.exit(1);
+            }
+            if (timeAfterEquilibrium <= 0) {
+                System.out.println("Invalid argument time after equilibrium, must be positive");
+                System.exit(1);
+            }
+        } else {
+            timeAfterEquilibrium = null;
+        }
+
+        aux = cmd.getOptionValue("partition-size");
         if (aux != null) {
             try {
                 doorSize = Double.parseDouble(aux);
             } catch (NumberFormatException e) {
-                System.out.println("Invalid argument partition door size, must be doubl");
+                System.out.println("Invalid argument partition door size, must be double");
                 System.exit(1);
             }
             if (doorSize <= 0 || doorSize >= yLength) {

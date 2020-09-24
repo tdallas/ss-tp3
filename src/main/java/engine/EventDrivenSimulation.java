@@ -63,7 +63,7 @@ public class EventDrivenSimulation {
     public void simulate() {
         Collision collision;
         fillQueue();
-        while (!cutCondition.isFinished() && !collisions.isEmpty()) {
+        while (!cutCondition.isFinished(timePassed) && !collisions.isEmpty()) {
             collision = collisions.poll();
 
             if (timePassed >= nextSave) {
