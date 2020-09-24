@@ -19,6 +19,7 @@ public class Particle {
     private int wallCollisions;
     private boolean isLastWallCollision;
     private int particleCollisions;
+    private WallType lastWallType;
 
     public Particle(int id, double xPosition, double yPosition, double xVelocity, double yVelocity, double radius, double mass) {
         this.id = id;
@@ -32,6 +33,7 @@ public class Particle {
         this.wallCollisions = 0;
         this.particleCollisions = 0;
         this.isLastWallCollision = false;
+        this.lastWallType = null;
     }
 
     public void addCollision() {
@@ -42,7 +44,8 @@ public class Particle {
         this.particleCollisions++;
     }
 
-    public void addWallCollision() {
+    public void addWallCollision(WallType wallType) {
+        lastWallType = wallType;
         isLastWallCollision = true;
         this.wallCollisions++;
     }
@@ -74,7 +77,12 @@ public class Particle {
     public String lastWallCollision() {
         if (isLastWallCollision) {
             isLastWallCollision = false;
-            return "y";
+            if(lastWallType == WallType.HORIZONTAL){
+                return "h";
+            }
+            else{
+                return "v";
+            }
         } else {
             return "n";
         }

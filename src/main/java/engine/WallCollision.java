@@ -22,7 +22,7 @@ public class WallCollision extends Collision {
             particle.setXVelocity(-particle.getXVelocity());
         }
         particle.addCollision();
-        particle.addWallCollision();
+        particle.addWallCollision(wallType);
     }
 
     @Override
