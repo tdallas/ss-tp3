@@ -20,7 +20,7 @@ public class FileGenerator {
     private final BufferedWriter bw;
     private FileWriter fw;
 
-    public FileGenerator(String filename, List<Particle> particles, List<Wall> walls) {
+    public FileGenerator(String filename, List<Wall> walls) {
         try {
             File directory = new File("out/");
             if (!directory.exists()) {
@@ -33,7 +33,7 @@ public class FileGenerator {
             e.printStackTrace();
         }
         this.bw = new BufferedWriter(fw);
-        writeWall(walls);
+        writeWall(walls, filename);
     }
 
     public void addToFile(List<Particle> particles, EquilibriumCutCondition cutCondition) {
@@ -43,12 +43,30 @@ public class FileGenerator {
         double rightColorR = 1 - rightColorB;
         try {
             bw.write(particles.size() + "\n");
-            bw.write("id xPos yPos xVel yVel radius redColor blueColor\n");
+            bw.write("id xPosition yPosition xVelocity yVelocity radius redColor blueColor mass wallCollision\n");
             for (Particle particle : particles) {
                 if (particle.getXPosition() < cutCondition.getXLength() / 2) {
-                    bw.write(particle.getId() + " " + particle.getXPosition() + " " + particle.getYPosition() + " " + particle.getXVelocity() + " " + particle.getYVelocity() + " " + particle.getRadius() + " " + leftColorR + " " + leftColorB + "\n");
+                    bw.write(particle.getId() + " " +
+                            particle.getXPosition() + " " +
+                            particle.getYPosition() + " " +
+                            particle.getXVelocity() + " " +
+                            particle.getYVelocity() + " " +
+                            particle.getRadius() + " " +
+                            leftColorR + " " +
+                            leftColorB + " " +
+                            particle.lastWallCollision() +
+                            "\n");
                 } else {
-                    bw.write(particle.getId() + " " + particle.getXPosition() + " " + particle.getYPosition() + " " + particle.getXVelocity() + " " + particle.getYVelocity() + " " + particle.getRadius() + " " + rightColorR + " " + rightColorB + "\n");
+                    bw.write(particle.getId() + " " +
+                            particle.getXPosition() + " " +
+                            particle.getYPosition() + " " +
+                            particle.getXVelocity() + " " +
+                            particle.getYVelocity() + " " +
+                            particle.getRadius() + " " +
+                            rightColorR + " " +
+                            rightColorB + " " +
+                            particle.lastWallCollision() +
+                            "\n");
                 }
             }
         } catch (IOException e) {
@@ -64,30 +82,30 @@ public class FileGenerator {
         }
     }
 
-    private void writeWall(List<Wall> walls) {
+    private void writeWall(List<Wall> walls, String filename) {
         int n = 0;
         double x, y, length;
         try {
-            FileWriter pw = new FileWriter("out/walls.xyz");
+            FileWriter pw = new FileWriter("out/walls-" + filename + ".xyz");
             pw.close();
-            pw = new FileWriter("out/walls.xyz", true);
+            pw = new FileWriter("out/walls-" + filename + ".xyz", true);
             BufferedWriter bw = new BufferedWriter(pw);
 
-            bw.write("xPos yPos (radius " + WALLS_RADIUS + ")\n");
+            bw.write("xPosition yPosition radius\n");
             for (Wall wall : walls) {
                 x = wall.getXPosition();
                 y = wall.getYPosition();
                 if (wall.getWallType() == WallType.HORIZONTAL) {
                     length = wall.getXPosition() + wall.getLength();
                     while (x < length) {
-                        bw.write(x + " " + y + "\n");
+                        bw.write(x + " " + y + " " + WALLS_RADIUS + "\n");
                         n++;
                         x += WALLS_RADIUS;
                     }
                 } else {
                     length = wall.getYPosition() + wall.getLength();
                     while (y < length) {
-                        bw.write(x + " " + y + "\n");
+                        bw.write(x + " " + y + " " + WALLS_RADIUS + "\n");
                         n++;
                         y += WALLS_RADIUS;
                     }
@@ -95,7 +113,7 @@ public class FileGenerator {
             }
             bw.close();
 
-            Path path = Paths.get("out/walls.xyz");
+            Path path = Paths.get("out/walls-" + filename + ".xyz");
             List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
             lines.add(0, Integer.toString(n));
             Files.write(path, lines, StandardCharsets.UTF_8);

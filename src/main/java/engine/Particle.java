@@ -16,6 +16,9 @@ public class Particle {
     private final double radius;
     private final double mass;
     private int collisions;
+    private int wallCollisions;
+    private boolean isLastWallCollision;
+    private int particleCollisions;
 
     public Particle(int id, double xPosition, double yPosition, double xVelocity, double yVelocity, double radius, double mass) {
         this.id = id;
@@ -26,10 +29,22 @@ public class Particle {
         this.radius = radius;
         this.mass = mass;
         this.collisions = 0;
+        this.wallCollisions = 0;
+        this.particleCollisions = 0;
+        this.isLastWallCollision = false;
     }
 
     public void addCollision() {
         this.collisions++;
+    }
+
+    public void addParticleCollision() {
+        this.particleCollisions++;
+    }
+
+    public void addWallCollision() {
+        isLastWallCollision = true;
+        this.wallCollisions++;
     }
 
     public void evolveOverTime(double time) {
@@ -54,5 +69,15 @@ public class Particle {
     @Override
     public int hashCode() {
         return Objects.hash(id, xPosition, yPosition, xVelocity, yVelocity, radius, mass);
+    }
+
+    public String lastWallCollision() {
+        if(isLastWallCollision){
+            isLastWallCollision = false;
+            return "y";
+        }
+        else {
+            return "n";
+        }
     }
 }

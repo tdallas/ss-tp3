@@ -38,6 +38,8 @@ public class ParticlesCollision extends Collision {
 
         p.addCollision();
         q.addCollision();
+        p.addParticleCollision();
+        q.addParticleCollision();
     }
 
     @Override
