@@ -5,7 +5,8 @@ from particle import Particle
 parser = Parser('out/output.xyz')
 output = parser.get_output()
 
-pressure_vs_t=[]
+pressure=[]
+t=[]
 
 temperature =0
 impulse = 0
@@ -23,7 +24,13 @@ for iteration in output:
             impulse+= abs(particle.get_x_velocity()) * 2
         if index == 99:
             dt += 0.01
-    pressure_vs_t.append({'T': temperature/4, 'I': impulse/(0.74+4)})
-print(dt)
-print(pressure_vs_t)
-print(count)
+    if temperature != 0.0 and impulse != 0.0:
+        t.append(temperature/4)
+        pressure.append(impulse/4.84)
+    
+plt.title('t = 4 (s)')
+plt.plot(t, pressure, label='100 partículas')
+plt.ylabel('Presión', fontsize=16)
+plt.xlabel('Temperatura', fontsize=16)
+plt.legend(title='Presión en función de la temperatura')
+plt.show()
