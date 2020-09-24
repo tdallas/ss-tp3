@@ -54,6 +54,7 @@ public class FileGenerator {
                             particle.getRadius() + " " +
                             leftColorR + " " +
                             leftColorB + " " +
+                            particle.getMass() + " " +
                             particle.lastWallCollision() +
                             "\n");
                 } else {
@@ -65,6 +66,7 @@ public class FileGenerator {
                             particle.getRadius() + " " +
                             rightColorR + " " +
                             rightColorB + " " +
+                            particle.getMass() + " " +
                             particle.lastWallCollision() +
                             "\n");
                 }
