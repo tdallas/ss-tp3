@@ -149,24 +149,20 @@ public class EventDrivenSimulation {
         Double aux;
         aux = timeToBottomWallCollision(p);
         if (aux != null) {
-            insertParticleToWallCollision(new WallCollision(aux, p, WallType.HORIZONTAL));
+            collisions.add(new WallCollision(aux, p, WallType.HORIZONTAL));
         }
         aux = timeToTopWallCollision(p);
         if (aux != null) {
-            insertParticleToWallCollision(new WallCollision(aux, p, WallType.HORIZONTAL));
+            collisions.add(new WallCollision(aux, p, WallType.HORIZONTAL));
         }
         aux = timeToLeftWallCollision(p);
         if (aux != null) {
-            insertParticleToWallCollision(new WallCollision(aux, p, WallType.VERTICAL));
+            collisions.add(new WallCollision(aux, p, WallType.VERTICAL));
         }
         aux = timeToRightWallCollision(p);
         if (aux != null) {
-            insertParticleToWallCollision(new WallCollision(aux, p, WallType.VERTICAL));
+            collisions.add(new WallCollision(aux, p, WallType.VERTICAL));
         }
-    }
-
-    private void insertParticleToWallCollision(final WallCollision wallCollision) {
-        collisions.add(wallCollision);
     }
 
     private Double timeToLeftWallCollision(Particle p) {
