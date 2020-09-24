@@ -75,9 +75,6 @@ public class EventDrivenSimulation {
             for (Particle particle : particles) {
                 particle.evolveOverTime(collision.getTimeToCollision());
             }
-            for (Collision c : collisions) {
-                c.setTimeToCollision(c.getTimeToCollision() - collision.getTimeToCollision());
-            }
 
             collision.collide();
             refillQueue(collision);
@@ -104,7 +101,13 @@ public class EventDrivenSimulation {
 
     public void refillQueue(Collision collision) {
         Double aux;
+        //remove last particles collisions
         collisions.removeIf(h -> h.containsParticles(collision.getCollisionParticles()));
+        //update collisions times
+        for (Collision c : collisions) {
+            c.setTimeToCollision(c.getTimeToCollision() - collision.getTimeToCollision());
+        }
+        // add new particles collisions
         for (Particle q : collision.getCollisionParticles()) {
             for (Particle p : particles) {
                 if (!p.equals(q)) {

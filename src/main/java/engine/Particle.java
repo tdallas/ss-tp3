@@ -72,11 +72,10 @@ public class Particle {
     }
 
     public String lastWallCollision() {
-        if(isLastWallCollision){
+        if (isLastWallCollision) {
             isLastWallCollision = false;
             return "y";
-        }
-        else {
+        } else {
             return "n";
         }
     }
