@@ -1,4 +1,4 @@
-from parser import Parser
+from parser_xyz import Parser
 
 parser = Parser('out/output.xyz')
 output = parser.get_output()

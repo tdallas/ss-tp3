@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from parser import Parser
+from parser_xyz import Parser
 from particle import Particle
 
 parser = Parser('out/output.xyz')
