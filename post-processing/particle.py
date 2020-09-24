@@ -1,3 +1,5 @@
+from math import sqrt
+
 class Particle():
     def __init__(self, x_position, y_position, x_velocity, y_velocity, wall_collission):
         self.x_position = float(x_position)
@@ -24,3 +26,6 @@ class Particle():
 
     def belongs_to_right_container(self):
         return not self.belongs_to_left_container()
+
+    def get_velocity(self):
+        return sqrt((self.get_x_velocity() ** 2) + (self.get_y_velocity()**2))
