@@ -10,19 +10,30 @@ class Parser():
 
     def parse_output(self, output_path):
         output = []
+        equilibriumCount = 0
+        totalIterations = 0
         with open(output_path) as f:
             lines = f.readlines() # list containing lines of file
             iteration = []
+            e = False
             for line in lines:
                 if self.is_header(line):
                     pass
                 elif self.iteration_finished(line):
+                    totalIterations+=1
                     if len(iteration) > 1: 
                         output.append(iteration)
+                    if e:
+                        equilibriumCount+=1
+                    e = False
                     iteration = []
                 else:
                     particle = self.create_particle(line.replace('\n', '').split(' '))
+                    if not e and particle.is_in_equilibrium():
+                        e = True
                     iteration.append(particle)
+        print('iteraciones en equilibrio', equilibriumCount)
+        print('total iterations', totalIterations)
         return output
     
     def is_header(self, line):

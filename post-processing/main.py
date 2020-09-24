@@ -19,9 +19,11 @@ for iteration in output:
             impulse+= abs(particle.get_y_velocity()) * 2
         else:
             impulse+= abs(particle.get_x_velocity()) * 2
+
+for iteration in output:
     for particle in filter(lambda p: p.is_in_equilibrium(), iteration):
         temperature += (particle.get_velocity()**2)/2
 
-print('total pressure in system =', (impulse) / (0.48 + 0.18 + 0.08 + 10))
-print('temperature =', temperature/10)
+print('total pressure in system =', (impulse) / (0.48 + 0.18 + 0.08 + 4))
+print('temperature =', temperature/4)
 
