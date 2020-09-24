@@ -26,7 +26,7 @@ class Parser():
         return output
     
     def is_header(self, line):
-        return line == 'id xPosition yPosition xVelocity yVelocity radius redColor blueColor mass wallCollision\n'
+        return line == 'id xPosition yPosition xVelocity yVelocity radius redColor blueColor mass wallCollision equilibrium\n'
 
     def iteration_finished(self, line):
         return len(line.split(' ')) == 1
@@ -37,5 +37,6 @@ class Parser():
             line[2],
             line[3],
             line[4],
+            line[-2],
             line[-1]
         )

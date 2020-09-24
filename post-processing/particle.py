@@ -1,13 +1,14 @@
 from math import sqrt
 
 class Particle():
-    def __init__(self, x_position, y_position, x_velocity, y_velocity, wall_collission):
+    def __init__(self, x_position, y_position, x_velocity, y_velocity, wall_collission, in_equilibrium):
         self.x_position = float(x_position)
         self.y_position = float(y_position)
         self.x_velocity = float(x_velocity)
         self.y_velocity = float(y_velocity)
         # h is horizontal wall, v is vertical wall
         self.wall_collission = wall_collission
+        self.in_equilibrium = in_equilibrium
 
     def __str__(self):
         return 'Position: [' + str(self.x_position) + ', ' + str(self.y_position) + ']\nVelocity: [' + str(self.x_velocity) + ', ' + str(self.y_velocity) + ']\nWall collission: ' + str(self.wall_collission) +'\n' 
@@ -29,3 +30,6 @@ class Particle():
 
     def get_velocity(self):
         return sqrt((self.get_x_velocity() ** 2) + (self.get_y_velocity()**2))
+
+    def is_in_equilibrium(self):
+        return self.in_equilibrium == 'y'
