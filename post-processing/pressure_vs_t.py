@@ -23,7 +23,7 @@ for iteration in output:
             impulse+= abs(particle.get_x_velocity()) * 2
         if index == 99:
             dt += 0.01
-    pressure_vs_t.append({'T': temperature, 'P': impulse/(0.48 + 0.18 + 0.08)})
+    pressure_vs_t.append({'T': temperature/4, 'I': impulse/(0.74+4)})
 print(dt)
-print(pressure_vs_t[:10])
+print(pressure_vs_t)
 print(count)

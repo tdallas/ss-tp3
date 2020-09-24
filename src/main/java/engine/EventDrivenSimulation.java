@@ -77,7 +77,7 @@ public class EventDrivenSimulation {
     public void simulate() {
         Collision collision;
         fillQueue();
-        while (!cutCondition.isFinished(timePassed) && !collisions.isEmpty()) {
+        while (!cutCondition.isFinished(nextSave) && !collisions.isEmpty()) {
             collision = collisions.poll();
 
             if(csvFileGenerator == null) {
