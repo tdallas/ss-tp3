@@ -23,6 +23,7 @@ public class GasesLawEquilibriumCutCondition extends EquilibriumCutCondition{
             return false;
         }
         else{
+            super.isFinished(time);
             return time > (timeAtEquilibrium + timeAfterEquilibrium);
         }
     }
