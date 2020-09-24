@@ -1,6 +1,7 @@
 import engine.CutCondition;
 import engine.EventDrivenSimulation;
 import org.apache.commons.cli.*;
+import system.CsvFileGenerator;
 import system.EquilibriumCutCondition;
 import system.GasesLawEquilibriumCutCondition;
 import system.SystemGenerator;
@@ -14,6 +15,7 @@ public class Main {
     private static double deltaTime;              //seconds
     private static Double doorSize;               //meters
     private static Double timeAfterEquilibrium = null; //seconds
+    private static Integer numberOfRepetitions = null;
     private static final double xLength = 0.24;   //meters
     private static final double yLength = 0.09;   //meters
     private static final double mass = 1;         //kg
@@ -34,39 +36,59 @@ public class Main {
         } else {
             random = new Random(seed);
         }
-        System.out.println("Seed: " + seed);
+        if(numberOfRepetitions == null) {
+            System.out.println("Seed: " + seed);
+        }
 
         SystemGenerator systemGenerator;
         CutCondition equilibriumCutCondition;
         EventDrivenSimulation eventDrivenSimulation;
 
-        if (doorSize != null) {
-            //With partition and doorSize (con tabique)
-            systemGenerator = new SystemGenerator(random, doorSize, xLength, yLength, numberOfParticles, mass, radius, velocity);
-            if(timeAfterEquilibrium == null) {
-                equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
+        if(numberOfRepetitions == null) {
+            if (doorSize != null) {
+                //With partition and doorSize (con tabique)
+                systemGenerator = new SystemGenerator(random, doorSize, xLength, yLength, numberOfParticles, mass, radius, velocity);
+                if (timeAfterEquilibrium == null) {
+                    equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
+                } else {
+                    equilibriumCutCondition = new GasesLawEquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage, timeAfterEquilibrium);
+                }
+                eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength, doorSize, null);
+            } else {
+                //Without partition (sin tabique)
+                systemGenerator = new SystemGenerator(random, xLength, yLength, numberOfParticles, mass, radius, velocity);
+                if (timeAfterEquilibrium == null) {
+                    equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
+                } else {
+                    equilibriumCutCondition = new GasesLawEquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage, timeAfterEquilibrium);
+                }
+                eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength, null);
             }
-            else{
-                equilibriumCutCondition = new GasesLawEquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage, timeAfterEquilibrium);
-            }
-            eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength, doorSize);
-        } else {
-            //Without partition (sin tabique)
-            systemGenerator = new SystemGenerator(random, xLength, yLength, numberOfParticles, mass, radius, velocity);
-            if(timeAfterEquilibrium == null) {
-                equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
-            }
-            else{
-                equilibriumCutCondition = new GasesLawEquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage, timeAfterEquilibrium);
-            }
-            eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength);
-        }
-
         time = System.currentTimeMillis();
         eventDrivenSimulation.simulate();
         time = System.currentTimeMillis() - time;
-
         System.out.println("Simulation finished in " + time + " ms.");
+        }
+        else{
+            CsvFileGenerator csvFileGenerator = new CsvFileGenerator(filename);
+            while(numberOfRepetitions > 0){
+                random = new Random();
+                if (doorSize != null) {
+                    //With partition and doorSize (con tabique)
+                    systemGenerator = new SystemGenerator(random, doorSize, xLength, yLength, numberOfParticles, mass, radius, velocity);
+                    equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
+                    eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength, doorSize, csvFileGenerator);
+                } else {
+                    //Without partition (sin tabique)
+                    systemGenerator = new SystemGenerator(random, xLength, yLength, numberOfParticles, mass, radius, velocity);
+                    equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
+                    eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength, csvFileGenerator);
+                }
+                eventDrivenSimulation.simulate();
+                numberOfRepetitions--;
+            }
+            csvFileGenerator.closeFile();
+        }
     }
 
     private static void parseArguments(String[] args) {
@@ -91,6 +113,10 @@ public class Main {
         Option seedOption = new Option("s", "seed", true, "seed for randomizer (optional)");
         seedOption.setRequired(false);
         options.addOption(seedOption);
+
+        Option numberOfRepetitionsOption = new Option("r", "number-of-repetitions", true, "number of repetitions of same configuration (optional)");
+        numberOfRepetitionsOption.setRequired(false);
+        options.addOption(numberOfRepetitionsOption);
 
         Option timeAfterEquilibriumOption = new Option("t", "time-after-equilibrium", true, "time after equilibrium to test ideal gases law (optional)");
         timeAfterEquilibriumOption.setRequired(false);
@@ -167,6 +193,22 @@ public class Main {
             }
         } else {
             doorSize = null;
+        }
+
+        aux = cmd.getOptionValue("number-of-repetitions");
+        if (aux != null) {
+            try {
+                numberOfRepetitions = Integer.parseInt(aux);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid argument number of repetitions, must be integer");
+                System.exit(1);
+            }
+            if (numberOfRepetitions <= 1) {
+                System.out.println("Invalid argument number of repetitions, must be positive");
+                System.exit(1);
+            }
+        } else {
+            numberOfRepetitions = null;
         }
 
         aux = cmd.getOptionValue("seed");

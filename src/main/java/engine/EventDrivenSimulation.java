@@ -1,5 +1,6 @@
 package engine;
 
+import system.CsvFileGenerator;
 import system.EquilibriumCutCondition;
 import system.FileGenerator;
 
@@ -19,11 +20,17 @@ public class EventDrivenSimulation {
     private final double yLength;
     private final double doorSize;
     private final boolean hasPartition;
+    private final CsvFileGenerator csvFileGenerator;
 
-    public EventDrivenSimulation(List<Particle> particles, List<Wall> walls, double deltaTime, String filename, CutCondition cutCondition, double xLength, double yLength, double doorSize) {
+    public EventDrivenSimulation(List<Particle> particles, List<Wall> walls, double deltaTime, String filename, CutCondition cutCondition, double xLength, double yLength, double doorSize, CsvFileGenerator csvFileGenerator) {
         this.particles = particles;
         this.deltaTime = deltaTime;
-        this.fileGenerator = new FileGenerator(filename, walls);
+        if(csvFileGenerator == null) {
+            this.fileGenerator = new FileGenerator(filename, walls);
+        }
+        else{
+            this.fileGenerator = null;
+        }
         this.nextSave = deltaTime;
         this.collisions = new PriorityQueue<>((o1, o2) -> {
             if (o1.getTimeToCollision() > o2.getTimeToCollision()) {
@@ -38,12 +45,18 @@ public class EventDrivenSimulation {
         this.yLength = yLength;
         this.doorSize = doorSize;
         this.hasPartition = true;
+        this.csvFileGenerator = csvFileGenerator;
     }
 
-    public EventDrivenSimulation(List<Particle> particles, List<Wall> walls, double deltaTime, String filename, CutCondition cutCondition, double xLength, double yLength) {
+    public EventDrivenSimulation(List<Particle> particles, List<Wall> walls, double deltaTime, String filename, CutCondition cutCondition, double xLength, double yLength, CsvFileGenerator csvFileGenerator) {
         this.particles = particles;
         this.deltaTime = deltaTime;
-        this.fileGenerator = new FileGenerator(filename, walls);
+        if(csvFileGenerator == null) {
+            this.fileGenerator = new FileGenerator(filename, walls);
+        }
+        else{
+            this.fileGenerator = null;
+        }
         this.nextSave = deltaTime;
         this.collisions = new PriorityQueue<>((o1, o2) -> {
             if (o1.getTimeToCollision() > o2.getTimeToCollision()) {
@@ -58,6 +71,7 @@ public class EventDrivenSimulation {
         this.yLength = yLength;
         this.doorSize = 0;
         this.hasPartition = false;
+        this.csvFileGenerator = csvFileGenerator;
     }
 
     public void simulate() {
@@ -66,9 +80,11 @@ public class EventDrivenSimulation {
         while (!cutCondition.isFinished(timePassed) && !collisions.isEmpty()) {
             collision = collisions.poll();
 
-            if (timePassed >= nextSave) {
-                nextSave += deltaTime;
-                fileGenerator.addToFile(particles, (EquilibriumCutCondition) cutCondition);
+            if(csvFileGenerator == null) {
+                if (timePassed >= nextSave) {
+                    nextSave += deltaTime;
+                    fileGenerator.addToFile(particles, (EquilibriumCutCondition) cutCondition);
+                }
             }
             timePassed += collision.getTimeToCollision();
 
@@ -79,7 +95,13 @@ public class EventDrivenSimulation {
             collision.collide();
             refillQueue(collision);
         }
-        fileGenerator.closeFile();
+
+        if(csvFileGenerator == null) {
+            fileGenerator.closeFile();
+        }
+        else{
+            csvFileGenerator.addToFile(doorSize, timePassed);
+        }
     }
 
     private void fillQueue() {
