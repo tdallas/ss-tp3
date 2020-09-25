@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from parser_xyz import Parser
 from particle import Particle
 
-parser = Parser('out/output01.xyz')
+parser = Parser('out/output05.xyz')
 output = parser.get_output()
 
 t=[]

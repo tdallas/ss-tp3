@@ -9,7 +9,7 @@ class Particle():
         # h is horizontal wall, v is vertical wall
         self.wall_collission = wall_collission
         self.in_equilibrium = in_equilibrium
-        self.dt = dt
+        self.dt = float(dt)
 
     def __str__(self):
         return 'Position: [' + str(self.x_position) + ', ' + str(self.y_position) + ']\nVelocity: [' + str(self.x_velocity) + ', ' + str(self.y_velocity) + ']\nWall collission: ' + str(self.wall_collission) +'\n' 

@@ -42,9 +42,20 @@ To run the following python visual charts must install the following libraries:
 
 `pip3 install -r post-processing/requirements.txt`
 
+For each python script, [output.xyz path | variables refered to simulation run] should be place in variable script.
+
+For a visual chart of pressure vs temperature with custom door size and **t** seconds before equilibrium:
+
+`python3 post-processing/pressure_vs_t.py`
+
 For a visual chart of time average with door size 0.01 0.03 and 0.05:
 
-`python3 visual/time_average.py`
+`python3 post-processing/time_average.py`
+
+For a visual chart of time average with custom door size:
+
+`python3 post-processing/particles_in_right.py`
+
 
 ## Authors
 
