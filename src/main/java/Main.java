@@ -16,13 +16,12 @@ public class Main {
     private static Double doorSize;               //meters
     private static Double timeAfterEquilibrium = null; //seconds
     private static Integer numberOfRepetitions = null;
+    private static double velocity = 0.01;        //meters per second
     private static final double xLength = 0.24;   //meters
     private static final double yLength = 0.09;   //meters
     private static final double mass = 1;         //kg
     private static final double radius = 0.0015;  //meters
-    private static final double velocity = 0.01;  //meters per second
-    private static final double equilibriumPercentage = 0.01;
-
+    private static final double equilibriumPercentage = 0.02;
 
     public static void main(String[] args) {
         long time;
@@ -36,9 +35,21 @@ public class Main {
         } else {
             random = new Random(seed);
         }
-        if(numberOfRepetitions == null) {
-            System.out.println("Seed: " + seed);
+        //Print input
+        System.out.println("Input: ");
+        System.out.println("Seed: " + seed);
+        System.out.println("Number of particles: " + numberOfParticles);
+        if(doorSize != null) {
+            System.out.println("Door size: " + doorSize);
         }
+        System.out.println("Particles velocity: " + velocity);
+        System.out.println("Particles radius: " + radius);
+        System.out.println("Particles mass: " + mass);
+        System.out.println("Time delta: " + deltaTime);
+        if(timeAfterEquilibrium != null){
+            System.out.println("Time after equilibrium: " + timeAfterEquilibrium);
+        }
+        System.out.println("--------------------------");
 
         SystemGenerator systemGenerator;
         CutCondition equilibriumCutCondition;
@@ -68,11 +79,13 @@ public class Main {
         eventDrivenSimulation.simulate();
         time = System.currentTimeMillis() - time;
         System.out.println("Simulation finished in " + time + " ms.");
+        System.out.println("Output files created: ");
+        System.out.println("out/" + filename + ".xyz");
+        System.out.println("out/walls-" + filename + ".xyz");
         }
         else{
             CsvFileGenerator csvFileGenerator = new CsvFileGenerator(filename);
             while(numberOfRepetitions > 0){
-                random = new Random();
                 if (doorSize != null) {
                     //With partition and doorSize (con tabique)
                     systemGenerator = new SystemGenerator(random, doorSize, xLength, yLength, numberOfParticles, mass, radius, velocity);
@@ -113,6 +126,10 @@ public class Main {
         Option seedOption = new Option("s", "seed", true, "seed for randomizer (optional)");
         seedOption.setRequired(false);
         options.addOption(seedOption);
+
+        Option velocityOption = new Option("v", "velocity", true, "particles velocity (optional)");
+        velocityOption.setRequired(false);
+        options.addOption(velocityOption);
 
         Option numberOfRepetitionsOption = new Option("r", "number-of-repetitions", true, "number of repetitions of same configuration (optional)");
         numberOfRepetitionsOption.setRequired(false);
@@ -217,6 +234,20 @@ public class Main {
                 seed = Long.parseLong(aux);
             } catch (NumberFormatException e) {
                 System.out.println("Invalid argument seed, must be long");
+                System.exit(1);
+            }
+        }
+
+        aux = cmd.getOptionValue("velocity");
+        if (aux != null) {
+            try {
+                velocity = Double.parseDouble(aux);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid argument velocity, must be double");
+                System.exit(1);
+            }
+            if (velocity < 0) {
+                System.out.println("Invalid argument velocity, must be positive");
                 System.exit(1);
             }
         }

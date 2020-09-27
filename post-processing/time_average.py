@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 n_values = ['01', '03', '05']
 
 for n in n_values:
-    cmd = "java -jar target/ss-tp3-1.0.jar -n 100 -dt 0.001 -p 0.%s -o repetitions%s -r 100" % (n, n)
+    cmd = "java -jar target/ss-tp3-1.0.jar -n 100 -dt 0.1 -p 0.%s -o repetitions%s -r 100" % (n, n)
     print(cmd)
     os.system(cmd)
 

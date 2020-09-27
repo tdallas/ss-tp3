@@ -116,7 +116,7 @@ public class SystemGenerator {
     }
 
     private int checkCorrectParticleDistribution(final double x, final double y, final double radius) {
-        if (x - radius < 0 || y - radius < 0 || x + radius > xLength || y + radius > yLength) {
+        if (x - radius < 0 || y - radius < 0 || x + radius > (xLength / 2) || y + radius > yLength) {
             return 0;
         }
 

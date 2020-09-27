@@ -50,7 +50,7 @@ public class FileGenerator {
         }
         try {
             bw.write(particles.size() + "\n");
-            bw.write("id xPosition yPosition xVelocity yVelocity radius redColor blueColor mass wallCollision equilibrium timePassed\n");
+            bw.write("id xPosition yPosition xVelocity yVelocity radius redColor blueColor mass collisionType equilibrium timePassed\n");
             for (Particle particle : particles) {
                 if (particle.getXPosition() < cutCondition.getXLength() / 2) {
                     bw.write(particle.getId() + " " +
@@ -62,7 +62,7 @@ public class FileGenerator {
                             leftColorR + " " +
                             leftColorB + " " +
                             particle.getMass() + " " +
-                            particle.lastWallCollision() + " " +
+                            particle.lastCollision() + " " +
                             equilibrium + " " +
                             timePassed +
                             "\n");
@@ -76,7 +76,7 @@ public class FileGenerator {
                             rightColorR + " " +
                             rightColorB + " " +
                             particle.getMass() + " " +
-                            particle.lastWallCollision() + " " +
+                            particle.lastCollision() + " " +
                             equilibrium + " " +
                             timePassed +
                             "\n");

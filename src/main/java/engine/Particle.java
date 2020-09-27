@@ -17,6 +17,7 @@ public class Particle {
     private final double mass;
     private int collisions;
     private int wallCollisions;
+    private boolean isLastParticleCollision;
     private boolean isLastWallCollision;
     private int particleCollisions;
     private WallType lastWallType;
@@ -33,6 +34,7 @@ public class Particle {
         this.wallCollisions = 0;
         this.particleCollisions = 0;
         this.isLastWallCollision = false;
+        this.isLastParticleCollision = false;
         this.lastWallType = null;
     }
 
@@ -74,7 +76,7 @@ public class Particle {
         return Objects.hash(id, xPosition, yPosition, xVelocity, yVelocity, radius, mass);
     }
 
-    public String lastWallCollision() {
+    public String lastCollision() {
         if (isLastWallCollision) {
             isLastWallCollision = false;
             if(lastWallType == WallType.HORIZONTAL){
@@ -83,6 +85,9 @@ public class Particle {
             else{
                 return "v";
             }
+        } else if(isLastParticleCollision){
+            isLastParticleCollision = false;
+            return "p";
         } else {
             return "n";
         }
