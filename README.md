@@ -23,6 +23,8 @@ Required options: n, o
 
 `-v,--velocity <arg>                 particles velocity (optional)`
 
+`-nw,--no-walls                      not print walls file (optional)`
+
 ## Output
 The program will generate two files with the given output file name:
 
@@ -44,20 +46,23 @@ To run the following python visual charts must install the following libraries:
 
 `pip3 install -r post-processing/requirements.txt`
 
-For each python script, [output.xyz path | variables refered to simulation run] should be place in variable script.
+For all python scripts to run, is needed to compile de java simulator first.
 
-For a visual chart of pressure vs temperature with custom door size and **t** seconds before equilibrium:
+For visual charts of particles fraction with door sizes: 0.01, 0.03 and 0.05:
 
-`python3 post-processing/pressure_vs_t.py`
+`python3 post-processing/particles_fraction.py`
 
-For a visual chart of time average with door size 0.01 0.03 and 0.05:
+For a visual chart of time average with door sizes: 0.01, 0.03 and 0.05:
 
 `python3 post-processing/time_average.py`
 
-For a visual chart of time average with custom door size:
+For a visual chart of pressure vs temperature after equilibrium:
 
-`python3 post-processing/particles_in_right.py`
+`python3 post-processing/pressure_vs_temperature.py`
 
+For a visual chart of diffusion coefficient:
+
+`python3 post-processing/diffusion.py`
 
 ## Authors
 
