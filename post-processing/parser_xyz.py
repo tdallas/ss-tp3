@@ -30,6 +30,13 @@ class XYZParser:
     def is_header(line):
         return line == 'id xPosition yPosition xVelocity yVelocity radius redColor blueColor mass collisionType equilibrium timePassed\n'
 
+    def get_iterations_after_equilibrium(self):
+        iterations_after_equilibrium = []
+        for iteration in self.output:
+            if iteration[0].is_in_equilibrium():
+                iterations_after_equilibrium.append(iteration)
+        return iterations_after_equilibrium
+
     def iteration_finished(self, line):
         return len(line.split(' ')) == 1
 
