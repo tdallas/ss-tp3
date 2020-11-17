@@ -21,8 +21,11 @@ class Particle:
     def get_id(self):
         return self.id
 
-    def get_collision_type(self):
-        return self.collision_type
+    def get_x_position(self):
+        return self.x_position
+
+    def get_y_position(self):
+        return self.y_position
 
     def get_x_velocity(self):
         return self.x_velocity
@@ -30,14 +33,11 @@ class Particle:
     def get_y_velocity(self):
         return self.y_velocity
 
-    def belongs_to_left_container(self):
-        return self.x_position < 0.12
-
-    def belongs_to_right_container(self):
-        return not self.belongs_to_left_container()
-
     def get_velocity(self):
         return sqrt((self.get_x_velocity() ** 2) + (self.get_y_velocity()**2))
+
+    def get_collision_type(self):
+        return self.collision_type
 
     def is_in_equilibrium(self):
         return self.in_equilibrium == 'y'

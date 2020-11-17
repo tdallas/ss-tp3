@@ -23,11 +23,11 @@ public class EventDrivenSimulation {
     private final boolean hasPartition;
     private final CsvFileGenerator csvFileGenerator;
 
-    public EventDrivenSimulation(List<Particle> particles, List<Wall> walls, double deltaTime, String filename, CutCondition cutCondition, double xLength, double yLength, double doorSize, CsvFileGenerator csvFileGenerator) {
+    public EventDrivenSimulation(List<Particle> particles, List<Wall> walls, double deltaTime, String filename, CutCondition cutCondition, double xLength, double yLength, double doorSize, CsvFileGenerator csvFileGenerator, boolean notPrintWalls) {
         this.particles = particles;
         this.deltaTime = deltaTime;
         if(csvFileGenerator == null) {
-            this.fileGenerator = new FileGenerator(filename, walls);
+            this.fileGenerator = new FileGenerator(filename, walls, notPrintWalls);
         }
         else{
             this.fileGenerator = null;
@@ -49,11 +49,11 @@ public class EventDrivenSimulation {
         this.csvFileGenerator = csvFileGenerator;
     }
 
-    public EventDrivenSimulation(List<Particle> particles, List<Wall> walls, double deltaTime, String filename, CutCondition cutCondition, double xLength, double yLength, CsvFileGenerator csvFileGenerator) {
+    public EventDrivenSimulation(List<Particle> particles, List<Wall> walls, double deltaTime, String filename, CutCondition cutCondition, double xLength, double yLength, CsvFileGenerator csvFileGenerator, boolean notPrintWalls) {
         this.particles = particles;
         this.deltaTime = deltaTime;
         if(csvFileGenerator == null) {
-            this.fileGenerator = new FileGenerator(filename, walls);
+            this.fileGenerator = new FileGenerator(filename, walls, notPrintWalls);
         }
         else{
             this.fileGenerator = null;

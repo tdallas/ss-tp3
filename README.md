@@ -21,6 +21,8 @@ Required options: n, o
 
 `-t,--time-after-equilibrium <arg>   time after equilibrium to test ideal gases law (optional)`
 
+`-v,--velocity <arg>                 particles velocity (optional)`
+
 ## Output
 The program will generate two files with the given output file name:
 

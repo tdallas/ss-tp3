@@ -20,7 +20,7 @@ public class FileGenerator {
     private final BufferedWriter bw;
     private FileWriter fw;
 
-    public FileGenerator(String filename, List<Wall> walls) {
+    public FileGenerator(String filename, List<Wall> walls, boolean notPrintWalls) {
         try {
             File directory = new File("out/");
             if (!directory.exists()) {
@@ -33,7 +33,9 @@ public class FileGenerator {
             e.printStackTrace();
         }
         this.bw = new BufferedWriter(fw);
-        writeWall(walls, filename);
+        if(!notPrintWalls) {
+            writeWall(walls, filename);
+        }
     }
 
     public void addToFile(List<Particle> particles, EquilibriumCutCondition cutCondition, double timePassed) {

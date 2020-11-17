@@ -17,6 +17,7 @@ public class Main {
     private static Double timeAfterEquilibrium = null; //seconds
     private static Integer numberOfRepetitions = null;
     private static double velocity = 0.01;        //meters per second
+    private static boolean notPrintWalls;
     private static final double xLength = 0.24;   //meters
     private static final double yLength = 0.09;   //meters
     private static final double mass = 1;         //kg
@@ -64,7 +65,7 @@ public class Main {
                 } else {
                     equilibriumCutCondition = new GasesLawEquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage, timeAfterEquilibrium);
                 }
-                eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength, doorSize, null);
+                eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength, doorSize, null, notPrintWalls);
             } else {
                 //Without partition (sin tabique)
                 systemGenerator = new SystemGenerator(random, xLength, yLength, numberOfParticles, mass, radius, velocity);
@@ -73,7 +74,7 @@ public class Main {
                 } else {
                     equilibriumCutCondition = new GasesLawEquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage, timeAfterEquilibrium);
                 }
-                eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength, null);
+                eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength, null, notPrintWalls);
             }
         time = System.currentTimeMillis();
         eventDrivenSimulation.simulate();
@@ -81,27 +82,31 @@ public class Main {
         System.out.println("Simulation finished in " + time + " ms.");
         System.out.println("Output files created: ");
         System.out.println("out/" + filename + ".xyz");
-        System.out.println("out/walls-" + filename + ".xyz");
+        if(!notPrintWalls) {
+            System.out.println("out/walls-" + filename + ".xyz");
+        }
         }
         else{
             CsvFileGenerator csvFileGenerator = new CsvFileGenerator(filename);
             while(numberOfRepetitions > 0){
+                System.out.println(numberOfRepetitions + " repetitions left to finish.");
                 if (doorSize != null) {
                     //With partition and doorSize (con tabique)
                     systemGenerator = new SystemGenerator(random, doorSize, xLength, yLength, numberOfParticles, mass, radius, velocity);
                     equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
-                    eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength, doorSize, csvFileGenerator);
+                    eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength, doorSize, csvFileGenerator, notPrintWalls);
                 } else {
                     //Without partition (sin tabique)
                     systemGenerator = new SystemGenerator(random, xLength, yLength, numberOfParticles, mass, radius, velocity);
                     equilibriumCutCondition = new EquilibriumCutCondition(systemGenerator.getParticles(), xLength, equilibriumPercentage);
-                    eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength, csvFileGenerator);
+                    eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength, csvFileGenerator, notPrintWalls);
                 }
                 eventDrivenSimulation.simulate();
                 numberOfRepetitions--;
             }
             csvFileGenerator.closeFile();
         }
+        System.out.println("--------------------------");
     }
 
     private static void parseArguments(String[] args) {
@@ -139,6 +144,10 @@ public class Main {
         timeAfterEquilibriumOption.setRequired(false);
         options.addOption(timeAfterEquilibriumOption);
 
+        Option notPrintWallsOption = new Option("nw", "no-walls", false, "not print walls file (optional)");
+        timeAfterEquilibriumOption.setRequired(false);
+        options.addOption(notPrintWallsOption);
+
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
         CommandLine cmd = null;
@@ -151,6 +160,8 @@ public class Main {
 
             System.exit(1);
         }
+
+        notPrintWalls = cmd.hasOption("no-walls");
 
         try {
             numberOfParticles = Integer.parseInt(cmd.getOptionValue("n-particles"));
