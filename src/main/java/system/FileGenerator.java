@@ -42,7 +42,7 @@ public class FileGenerator {
         double rightColorB = 1 - (double) cutCondition.getParticlesOnRight() / (double) particles.size();
         double rightColorR = 1 - rightColorB;
         String equilibrium;
-        if(cutCondition.isAfterEquilibrium()){
+        if(!cutCondition.isAfterEquilibrium()){
             equilibrium = "n";
         }
         else{

@@ -28,7 +28,6 @@ for iteration in output:
         t.append(temperature/4)
         pressure.append(impulse/4.84)
     
-plt.title('t = 4 (s)')
 plt.plot(t, pressure, label='100 partículas')
 plt.ylabel('Presión', fontsize=16)
 plt.xlabel('Temperatura', fontsize=16)

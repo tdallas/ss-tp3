@@ -5,7 +5,7 @@ import engine.Particle;
 import java.util.List;
 
 public class GasesLawEquilibriumCutCondition extends EquilibriumCutCondition{
-    private double timeAfterEquilibrium;
+    private final double timeAfterEquilibrium;
     private Double timeAtEquilibrium;
 
     public GasesLawEquilibriumCutCondition(List<Particle> particles, double xLength, double percentage, double timeAfterEquilibrium) {
@@ -30,6 +30,6 @@ public class GasesLawEquilibriumCutCondition extends EquilibriumCutCondition{
 
     @Override
     public boolean isAfterEquilibrium() {
-        return timeAtEquilibrium == null;
+        return timeAtEquilibrium != null;
     }
 }
