@@ -21,8 +21,9 @@ public class Particle {
     private boolean isLastWallCollision;
     private int particleCollisions;
     private WallType lastWallType;
+    private final boolean movable;
 
-    public Particle(int id, double xPosition, double yPosition, double xVelocity, double yVelocity, double radius, double mass) {
+    public Particle(int id, double xPosition, double yPosition, double xVelocity, double yVelocity, double radius, double mass, boolean movable) {
         this.id = id;
         this.xPosition = xPosition;
         this.yPosition = yPosition;
@@ -36,6 +37,7 @@ public class Particle {
         this.isLastWallCollision = false;
         this.isLastParticleCollision = false;
         this.lastWallType = null;
+        this.movable = movable;
     }
 
     public void addCollision() {
@@ -53,8 +55,10 @@ public class Particle {
     }
 
     public void evolveOverTime(double time) {
-        xPosition = xPosition + xVelocity * time;
-        yPosition = yPosition + yVelocity * time;
+        if(movable) {
+            xPosition = xPosition + xVelocity * time;
+            yPosition = yPosition + yVelocity * time;
+        }
     }
 
     @Override

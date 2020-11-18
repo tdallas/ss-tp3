@@ -16,30 +16,46 @@ public class ParticlesCollision extends Collision {
 
     @Override
     public void collide() {
-        double xDeltaR, yDeltaR, xDeltaV, yDeltaV, deltaVR, deltaRadius, j, xNewVelocity, yNewVelocity;
+        if(p.isMovable() && q.isMovable()) {
+            double xDeltaR, yDeltaR, xDeltaV, yDeltaV, deltaVR, deltaRadius, j, xNewVelocity, yNewVelocity;
 
-        xDeltaR = q.getXPosition() - p.getXPosition();
-        yDeltaR = q.getYPosition() - p.getYPosition();
-        xDeltaV = q.getXVelocity() - p.getXVelocity();
-        yDeltaV = q.getYVelocity() - p.getYVelocity();
+            xDeltaR = q.getXPosition() - p.getXPosition();
+            yDeltaR = q.getYPosition() - p.getYPosition();
+            xDeltaV = q.getXVelocity() - p.getXVelocity();
+            yDeltaV = q.getYVelocity() - p.getYVelocity();
 
-        deltaVR = xDeltaV * xDeltaR + yDeltaV * yDeltaR;
-        deltaRadius = p.getRadius() + q.getRadius();
+            deltaVR = xDeltaV * xDeltaR + yDeltaV * yDeltaR;
+            deltaRadius = p.getRadius() + q.getRadius();
 
-        j = (2 * p.getMass() * q.getMass() * deltaVR) / (deltaRadius * (p.getMass() + q.getMass()));
+            j = (2 * p.getMass() * q.getMass() * deltaVR) / (deltaRadius * (p.getMass() + q.getMass()));
 
-        xNewVelocity = j * xDeltaR / deltaRadius;
-        yNewVelocity = j * yDeltaR / deltaRadius;
+            xNewVelocity = j * xDeltaR / deltaRadius;
+            yNewVelocity = j * yDeltaR / deltaRadius;
 
-        p.setXVelocity(p.getXVelocity() + xNewVelocity / p.getMass());
-        p.setYVelocity(p.getYVelocity() + yNewVelocity / p.getMass());
-        q.setXVelocity(q.getXVelocity() - xNewVelocity / q.getMass());
-        q.setYVelocity(q.getYVelocity() - yNewVelocity / q.getMass());
+            p.setXVelocity(p.getXVelocity() + xNewVelocity / p.getMass());
+            p.setYVelocity(p.getYVelocity() + yNewVelocity / p.getMass());
+            q.setXVelocity(q.getXVelocity() - xNewVelocity / q.getMass());
+            q.setYVelocity(q.getYVelocity() - yNewVelocity / q.getMass());
 
-        p.addCollision();
-        q.addCollision();
-        p.addParticleCollision();
-        q.addParticleCollision();
+            p.addCollision();
+            q.addCollision();
+            p.addParticleCollision();
+            q.addParticleCollision();
+        }
+        else{
+            if(p.isMovable()){
+                p.setXVelocity(-p.getXVelocity());
+                p.setYVelocity(-p.getYVelocity());
+                p.addCollision();
+                p.addWallCollision(WallType.VERTICAL);
+            }
+            else{
+                q.setXVelocity(-q.getXVelocity());
+                q.setYVelocity(-q.getYVelocity());
+                q.addCollision();
+                q.addWallCollision(WallType.VERTICAL);
+            }
+        }
     }
 
     @Override

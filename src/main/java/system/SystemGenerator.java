@@ -67,6 +67,8 @@ public class SystemGenerator {
             double length = (yLength - doorSize) / 2;
             walls.add(new Wall(WallType.VERTICAL, xLength / 2, 0, length));
             walls.add(new Wall(WallType.VERTICAL, xLength / 2, length + doorSize, length));
+            particles.add(new Particle(idCounter++, xLength / 2, yLength / 2 + doorSize / 2, 0, 0, 0.00001, mass, false));
+            particles.add(new Particle(idCounter++, xLength / 2, yLength / 2 - doorSize / 2, 0, 0, 0.00001, mass, false));
         }
     }
 
@@ -103,7 +105,7 @@ public class SystemGenerator {
         xVelocity = Math.cos(angleInRadians) * velocity;
         yVelocity = Math.sin(angleInRadians) * velocity;
 
-        return new Particle(idCounter++, randomX, randomY, xVelocity, yVelocity, radius, mass);
+        return new Particle(idCounter++, randomX, randomY, xVelocity, yVelocity, radius, mass, true);
     }
 
     private double generateRandomDouble(final double min, final double max) {

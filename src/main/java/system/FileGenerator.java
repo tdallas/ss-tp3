@@ -51,37 +51,39 @@ public class FileGenerator {
             equilibrium = "y";
         }
         try {
-            bw.write(particles.size() + "\n");
+            bw.write((particles.size()-2) + "\n");
             bw.write("id xPosition yPosition xVelocity yVelocity radius redColor blueColor mass collisionType equilibrium timePassed\n");
             for (Particle particle : particles) {
-                if (particle.getXPosition() < cutCondition.getXLength() / 2) {
-                    bw.write(particle.getId() + " " +
-                            particle.getXPosition() + " " +
-                            particle.getYPosition() + " " +
-                            particle.getXVelocity() + " " +
-                            particle.getYVelocity() + " " +
-                            particle.getRadius() + " " +
-                            leftColorR + " " +
-                            leftColorB + " " +
-                            particle.getMass() + " " +
-                            particle.lastCollision() + " " +
-                            equilibrium + " " +
-                            timePassed +
-                            "\n");
-                } else {
-                    bw.write(particle.getId() + " " +
-                            particle.getXPosition() + " " +
-                            particle.getYPosition() + " " +
-                            particle.getXVelocity() + " " +
-                            particle.getYVelocity() + " " +
-                            particle.getRadius() + " " +
-                            rightColorR + " " +
-                            rightColorB + " " +
-                            particle.getMass() + " " +
-                            particle.lastCollision() + " " +
-                            equilibrium + " " +
-                            timePassed +
-                            "\n");
+                if(particle.isMovable()) {
+                    if (particle.getXPosition() < cutCondition.getXLength() / 2) {
+                        bw.write(particle.getId() + " " +
+                                particle.getXPosition() + " " +
+                                particle.getYPosition() + " " +
+                                particle.getXVelocity() + " " +
+                                particle.getYVelocity() + " " +
+                                particle.getRadius() + " " +
+                                leftColorR + " " +
+                                leftColorB + " " +
+                                particle.getMass() + " " +
+                                particle.lastCollision() + " " +
+                                equilibrium + " " +
+                                timePassed +
+                                "\n");
+                    } else {
+                        bw.write(particle.getId() + " " +
+                                particle.getXPosition() + " " +
+                                particle.getYPosition() + " " +
+                                particle.getXVelocity() + " " +
+                                particle.getYVelocity() + " " +
+                                particle.getRadius() + " " +
+                                rightColorR + " " +
+                                rightColorB + " " +
+                                particle.getMass() + " " +
+                                particle.lastCollision() + " " +
+                                equilibrium + " " +
+                                timePassed +
+                                "\n");
+                    }
                 }
             }
         } catch (IOException e) {
