@@ -27,5 +27,6 @@ for n in n_values:
 plt.ylabel('Tiempo (s)', fontsize=16)
 plt.xlabel('Tamaño de tabique (m)', fontsize=16)
 plt.legend(title='Tamaño de tabique')
+plt.ticklabel_format(useMathText=True)
 plt.tight_layout()
 plt.show()

@@ -35,5 +35,6 @@ for n in n_values:
     plt.plot(times, particles_right)
     plt.ylabel('Fracción de partículas', fontsize=16)
     plt.xlabel('Tiempo (s)', fontsize=16)
+    plt.ticklabel_format(useMathText=True)
     plt.tight_layout()
     plt.show()

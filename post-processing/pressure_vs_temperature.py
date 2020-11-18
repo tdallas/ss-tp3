@@ -37,9 +37,9 @@ for v in v_values:
         for iteration in iterations_after_equilibrium:
             for particle in iteration:
                 if particle.get_collision_type() == 'h':
-                    total_impulse += abs(particle.get_y_velocity()) * particle_mass
+                    total_impulse += 2*abs(particle.get_y_velocity()) * particle_mass
                 elif particle.get_collision_type() == 'v':
-                    total_impulse += abs(particle.get_x_velocity()) * particle_mass
+                    total_impulse += 2*abs(particle.get_x_velocity()) * particle_mass
         area = (2 * x_length + 2 * y_length + 2 * (y_length / 2 + float(door_size) / 2) + 2 * (y_length / 2 - float(door_size) / 2))
         pressure_at_iteration = total_impulse / (area * time_after_equilibrium)
         pressures_at_v.append(pressure_at_iteration)
@@ -54,5 +54,6 @@ plt.scatter(energies, pressures)
 plt.plot(energies, pressures)
 plt.ylabel('Presión (N/m)', fontsize=16)
 plt.xlabel('Energía (J)', fontsize=16)
+plt.ticklabel_format(useMathText=True)
 plt.tight_layout()
 plt.show()
