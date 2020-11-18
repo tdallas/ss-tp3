@@ -27,7 +27,7 @@ public class EventDrivenSimulation {
         this.particles = particles;
         this.deltaTime = deltaTime;
         if(csvFileGenerator == null) {
-            this.fileGenerator = new FileGenerator(filename, walls, notPrintWalls);
+            this.fileGenerator = new FileGenerator(filename, walls, notPrintWalls, false);
         }
         else{
             this.fileGenerator = null;
@@ -53,7 +53,7 @@ public class EventDrivenSimulation {
         this.particles = particles;
         this.deltaTime = deltaTime;
         if(csvFileGenerator == null) {
-            this.fileGenerator = new FileGenerator(filename, walls, notPrintWalls);
+            this.fileGenerator = new FileGenerator(filename, walls, notPrintWalls, true);
         }
         else{
             this.fileGenerator = null;

@@ -44,7 +44,7 @@ class XYZParser:
             particle = iteration[id]
             collision_type = particle.get_collision_type()
             if collision_type != 'h' and collision_type != 'v':
-                iteration.append(particle)
+                iterations.append(particle)
                 times.append(particle.get_time_passed())
             else:
                 return iterations, times

@@ -19,8 +19,9 @@ public class FileGenerator {
 
     private final BufferedWriter bw;
     private FileWriter fw;
+    private final boolean noDoor;
 
-    public FileGenerator(String filename, List<Wall> walls, boolean notPrintWalls) {
+    public FileGenerator(String filename, List<Wall> walls, boolean notPrintWalls, boolean noDoor) {
         try {
             File directory = new File("out/");
             if (!directory.exists()) {
@@ -36,6 +37,7 @@ public class FileGenerator {
         if(!notPrintWalls) {
             writeWall(walls, filename);
         }
+        this.noDoor = noDoor;
     }
 
     public void addToFile(List<Particle> particles, EquilibriumCutCondition cutCondition, double timePassed) {
@@ -51,7 +53,12 @@ public class FileGenerator {
             equilibrium = "y";
         }
         try {
-            bw.write((particles.size()-2) + "\n");
+            if(noDoor) {
+                bw.write(particles.size() + "\n");
+            }
+            else {
+                bw.write((particles.size() - 2) + "\n");
+            }
             bw.write("id xPosition yPosition xVelocity yVelocity radius redColor blueColor mass collisionType equilibrium timePassed\n");
             for (Particle particle : particles) {
                 if(particle.isMovable()) {
