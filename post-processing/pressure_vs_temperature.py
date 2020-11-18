@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from parser_xyz import XYZParser
 
+
 x_length = 0.24
 y_length = 0.09
 boltzmann_constant = 1.38064852-23

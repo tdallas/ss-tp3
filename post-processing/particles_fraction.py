@@ -2,6 +2,7 @@ import os
 import matplotlib.pyplot as plt
 from parser_xyz import XYZParser
 
+
 x_length = 0.24
 
 dt = '0.1'

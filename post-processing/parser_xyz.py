@@ -37,6 +37,19 @@ class XYZParser:
                 iterations_after_equilibrium.append(iteration)
         return iterations_after_equilibrium
 
+    def get_iterations_of_particle_with_id_until_wall_collision(self, id):
+        iterations = []
+        times = []
+        for iteration in self.output:
+            particle = iteration[id]
+            collision_type = particle.get_collision_type()
+            if collision_type != 'h' and collision_type != 'v':
+                iteration.append(particle)
+                times.append(particle.get_time_passed())
+            else:
+                return iterations, times
+        return iterations, times
+
     def iteration_finished(self, line):
         return len(line.split(' ')) == 1
 

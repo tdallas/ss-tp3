@@ -33,7 +33,7 @@ The program will generate two files with the given output file name:
 `out/walls-FILENAME.xyz`
 
 ## Usage example
-`java -jar target/ss-tp3-1.0.jar -n 100 -dt 0.01 -p 0.01 -o test`
+`java -jar target/ss-tp3-1.0.jar -n 100 -dt 0.1 -p 0.01 -o test`
 
 And this will generate:
 

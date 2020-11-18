@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 dt = '0.1'
 number_of_particles = 100
 repetitions = 100
