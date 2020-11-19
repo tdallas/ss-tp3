@@ -52,6 +52,10 @@ For visual charts of particles fraction with door sizes: 0.01, 0.03 and 0.05:
 
 `python3 post-processing/particles_fraction.py`
 
+For a visual chart of variation of number of particles:
+
+`python3 post-processing/particles_variation.py`
+
 For a visual chart of time average with door sizes: 0.01, 0.03 and 0.05:
 
 `python3 post-processing/time_average.py`
@@ -60,9 +64,13 @@ For a visual chart of pressure vs temperature after equilibrium:
 
 `python3 post-processing/pressure_vs_temperature.py`
 
-For a visual chart of diffusion coefficient:
+For a visual chart of dcm:
 
-`python3 post-processing/diffusion.py`
+`python3 post-processing/dcm.py`
+
+To generate files for animations:
+
+`python3 post-processing/animations.py`
 
 ## Authors
 
