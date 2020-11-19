@@ -16,7 +16,7 @@ public class ParticlesCollision extends Collision {
 
     @Override
     public void collide() {
-        if(p.isMovable() && q.isMovable()) {
+        if (p.isMovable() && q.isMovable()) {
             double xDeltaR, yDeltaR, xDeltaV, yDeltaV, deltaVR, deltaRadius, j, xNewVelocity, yNewVelocity;
 
             xDeltaR = q.getXPosition() - p.getXPosition();
@@ -41,15 +41,13 @@ public class ParticlesCollision extends Collision {
             q.addCollision();
             p.addParticleCollision();
             q.addParticleCollision();
-        }
-        else{
-            if(p.isMovable()){
+        } else {
+            if (p.isMovable()) {
                 p.setXVelocity(-p.getXVelocity());
                 p.setYVelocity(-p.getYVelocity());
                 p.addCollision();
                 p.addWallCollision(WallType.VERTICAL);
-            }
-            else{
+            } else {
                 q.setXVelocity(-q.getXVelocity());
                 q.setYVelocity(-q.getYVelocity());
                 q.addCollision();

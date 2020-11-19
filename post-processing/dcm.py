@@ -1,5 +1,4 @@
 import os
-import math
 import numpy as np
 import matplotlib.pyplot as plt
 from parser_xyz import XYZParser
@@ -86,6 +85,7 @@ plt.ticklabel_format(useMathText=True)
 plt.tight_layout()
 plt.show()
 
+print("Best slope is: " + str(best_slope))
 print("Plotting DCM comparison with best slope")
 plt.errorbar(dcm_averages_times, dcm_averages, yerr=dcm_averages_errors, capsize=3, elinewidth=1, markeredgewidth=1)
 plt.plot(dcm_averages_times, dcm_averages)

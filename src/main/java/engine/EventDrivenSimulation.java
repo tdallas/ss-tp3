@@ -3,7 +3,6 @@ package engine;
 import system.CsvFileGenerator;
 import system.EquilibriumCutCondition;
 import system.FileGenerator;
-import system.SystemGenerator;
 
 import java.util.List;
 import java.util.PriorityQueue;
@@ -26,10 +25,9 @@ public class EventDrivenSimulation {
     public EventDrivenSimulation(List<Particle> particles, List<Wall> walls, double deltaTime, String filename, CutCondition cutCondition, double xLength, double yLength, double doorSize, CsvFileGenerator csvFileGenerator, boolean notPrintWalls) {
         this.particles = particles;
         this.deltaTime = deltaTime;
-        if(csvFileGenerator == null) {
+        if (csvFileGenerator == null) {
             this.fileGenerator = new FileGenerator(filename, walls, notPrintWalls, false);
-        }
-        else{
+        } else {
             this.fileGenerator = null;
         }
         this.nextSave = deltaTime;
@@ -52,10 +50,9 @@ public class EventDrivenSimulation {
     public EventDrivenSimulation(List<Particle> particles, List<Wall> walls, double deltaTime, String filename, CutCondition cutCondition, double xLength, double yLength, CsvFileGenerator csvFileGenerator, boolean notPrintWalls) {
         this.particles = particles;
         this.deltaTime = deltaTime;
-        if(csvFileGenerator == null) {
+        if (csvFileGenerator == null) {
             this.fileGenerator = new FileGenerator(filename, walls, notPrintWalls, true);
-        }
-        else{
+        } else {
             this.fileGenerator = null;
         }
         this.nextSave = deltaTime;
@@ -81,7 +78,7 @@ public class EventDrivenSimulation {
         while (!cutCondition.isFinished(nextSave) && !collisions.isEmpty()) {
             collision = collisions.poll();
 
-            if(csvFileGenerator == null) {
+            if (csvFileGenerator == null) {
                 if (timePassed >= nextSave) {
                     nextSave += deltaTime;
                     fileGenerator.addToFile(particles, (EquilibriumCutCondition) cutCondition, timePassed);
@@ -97,10 +94,9 @@ public class EventDrivenSimulation {
             refillQueue(collision);
         }
 
-        if(csvFileGenerator == null) {
+        if (csvFileGenerator == null) {
             fileGenerator.closeFile();
-        }
-        else{
+        } else {
             csvFileGenerator.addToFile(doorSize, timePassed);
         }
     }

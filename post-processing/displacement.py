@@ -1,13 +1,11 @@
 import os
-import math
-import numpy as np
 import matplotlib.pyplot as plt
 from parser_xyz import XYZParser
 
 
 dt = 0.1
 number_of_particles = 100
-witness_particles = 20
+witness_particles = 40
 
 cmd = "java -jar target/ss-tp3-1.0.jar -n %s -dt %s -v 0.01 -o output-diffusion -nw" % (str(number_of_particles), str(dt))
 print(cmd)
@@ -35,7 +33,7 @@ for i in range(0, witness_particles):
         times_iterations[i].pop(0)
         plt.plot(times_iterations[i], dcms_iterations[i])
 
-plt.ylabel('Desplazamiento (m)', fontsize=16)
+plt.ylabel('Desplazamiento Cuadrático (m²)', fontsize=16)
 plt.xlabel('Tiempo (s)', fontsize=16)
 plt.ticklabel_format(useMathText=True)
 plt.tight_layout()

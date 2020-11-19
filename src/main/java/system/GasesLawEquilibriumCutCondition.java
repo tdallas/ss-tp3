@@ -4,7 +4,7 @@ import engine.Particle;
 
 import java.util.List;
 
-public class GasesLawEquilibriumCutCondition extends EquilibriumCutCondition{
+public class GasesLawEquilibriumCutCondition extends EquilibriumCutCondition {
     private final double timeAfterEquilibrium;
     private Double timeAtEquilibrium;
 
@@ -15,14 +15,13 @@ public class GasesLawEquilibriumCutCondition extends EquilibriumCutCondition{
     }
 
     @Override
-    public boolean isFinished(double time){
-        if(timeAtEquilibrium == null){
-            if(super.isFinished(time)){
+    public boolean isFinished(double time) {
+        if (timeAtEquilibrium == null) {
+            if (super.isFinished(time)) {
                 timeAtEquilibrium = time;
             }
             return false;
-        }
-        else{
+        } else {
             super.isFinished(time);
             return time > (timeAtEquilibrium + timeAfterEquilibrium);
         }

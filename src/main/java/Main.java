@@ -40,14 +40,14 @@ public class Main {
         System.out.println("Input: ");
         System.out.println("Seed: " + seed);
         System.out.println("Number of particles: " + numberOfParticles);
-        if(doorSize != null) {
+        if (doorSize != null) {
             System.out.println("Door size: " + doorSize);
         }
         System.out.println("Particles velocity: " + velocity);
         System.out.println("Particles radius: " + radius);
         System.out.println("Particles mass: " + mass);
         System.out.println("Time delta: " + deltaTime);
-        if(timeAfterEquilibrium != null){
+        if (timeAfterEquilibrium != null) {
             System.out.println("Time after equilibrium: " + timeAfterEquilibrium);
         }
         System.out.println("--------------------------");
@@ -56,7 +56,7 @@ public class Main {
         CutCondition equilibriumCutCondition;
         EventDrivenSimulation eventDrivenSimulation;
 
-        if(numberOfRepetitions == null) {
+        if (numberOfRepetitions == null) {
             if (doorSize != null) {
                 //With partition and doorSize (con tabique)
                 systemGenerator = new SystemGenerator(random, doorSize, xLength, yLength, numberOfParticles, mass, radius, velocity);
@@ -76,19 +76,18 @@ public class Main {
                 }
                 eventDrivenSimulation = new EventDrivenSimulation(systemGenerator.getParticles(), systemGenerator.getWalls(), deltaTime, filename, equilibriumCutCondition, xLength, yLength, null, notPrintWalls);
             }
-        time = System.currentTimeMillis();
-        eventDrivenSimulation.simulate();
-        time = System.currentTimeMillis() - time;
-        System.out.println("Simulation finished in " + time + " ms.");
-        System.out.println("Output files created: ");
-        System.out.println("out/" + filename + ".xyz");
-        if(!notPrintWalls) {
-            System.out.println("out/walls-" + filename + ".xyz");
-        }
-        }
-        else{
+            time = System.currentTimeMillis();
+            eventDrivenSimulation.simulate();
+            time = System.currentTimeMillis() - time;
+            System.out.println("Simulation finished in " + time + " ms.");
+            System.out.println("Output files created: ");
+            System.out.println("out/" + filename + ".xyz");
+            if (!notPrintWalls) {
+                System.out.println("out/walls-" + filename + ".xyz");
+            }
+        } else {
             CsvFileGenerator csvFileGenerator = new CsvFileGenerator(filename);
-            while(numberOfRepetitions > 0){
+            while (numberOfRepetitions > 0) {
                 System.out.println(numberOfRepetitions + " repetitions left to finish.");
                 if (doorSize != null) {
                     //With partition and doorSize (con tabique)

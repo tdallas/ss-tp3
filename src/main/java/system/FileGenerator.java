@@ -34,7 +34,7 @@ public class FileGenerator {
             e.printStackTrace();
         }
         this.bw = new BufferedWriter(fw);
-        if(!notPrintWalls) {
+        if (!notPrintWalls) {
             writeWall(walls, filename);
         }
         this.noDoor = noDoor;
@@ -46,22 +46,20 @@ public class FileGenerator {
         double rightColorB = 1 - (double) cutCondition.getParticlesOnRight() / (double) particles.size();
         double rightColorR = 1 - rightColorB;
         String equilibrium;
-        if(!cutCondition.isAfterEquilibrium()){
+        if (!cutCondition.isAfterEquilibrium()) {
             equilibrium = "n";
-        }
-        else{
+        } else {
             equilibrium = "y";
         }
         try {
-            if(noDoor) {
+            if (noDoor) {
                 bw.write(particles.size() + "\n");
-            }
-            else {
+            } else {
                 bw.write((particles.size() - 2) + "\n");
             }
             bw.write("id xPosition yPosition xVelocity yVelocity radius redColor blueColor mass collisionType equilibrium timePassed\n");
             for (Particle particle : particles) {
-                if(particle.isMovable()) {
+                if (particle.isMovable()) {
                     if (particle.getXPosition() < cutCondition.getXLength() / 2) {
                         bw.write(particle.getId() + " " +
                                 particle.getXPosition() + " " +

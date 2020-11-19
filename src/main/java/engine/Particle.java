@@ -55,7 +55,7 @@ public class Particle {
     }
 
     public void evolveOverTime(double time) {
-        if(movable) {
+        if (movable) {
             xPosition = xPosition + xVelocity * time;
             yPosition = yPosition + yVelocity * time;
         }
@@ -83,13 +83,12 @@ public class Particle {
     public String lastCollision() {
         if (isLastWallCollision) {
             isLastWallCollision = false;
-            if(lastWallType == WallType.HORIZONTAL){
+            if (lastWallType == WallType.HORIZONTAL) {
                 return "h";
-            }
-            else{
+            } else {
                 return "v";
             }
-        } else if(isLastParticleCollision){
+        } else if (isLastParticleCollision) {
             isLastParticleCollision = false;
             return "p";
         } else {
