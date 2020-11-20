@@ -59,16 +59,18 @@ plt.plot(dcm_averages_times, dcm_averages)
 plt.scatter(dcm_averages_times, dcm_averages, label="DCM")
 plt.ylabel('DCM (m²)', fontsize=16)
 plt.xlabel('Tiempo (s)', fontsize=16)
-plt.ticklabel_format(useMathText=True)
+plt.ticklabel_format(style='sci', useMathText=True)
 plt.tight_layout()
 plt.show()
 
 print("Plotting error with different diffusion coefficients")
 errors = []
+slopes = []
 best_slope = -1
 best_slope_error = 1.7976931348623157e+308
 for i in range(0, len(dcm_averages)):
     slope = dcm_averages[i]/dcm_averages_times[i]
+    slopes.append(slope)
     error = 0
     for j in range(0, len(dcm_averages)):
         error += (dcm_averages[j] - slope * dcm_averages_times[j])**2
@@ -77,10 +79,10 @@ for i in range(0, len(dcm_averages)):
         best_slope = slope
         best_slope_error = error
 
-plt.plot(dcm_averages, errors)
-plt.scatter(dcm_averages, errors)
-plt.ylabel('Error', fontsize=16)
-plt.xlabel('DCM (m²)', fontsize=16)
+plt.plot(slopes, errors)
+plt.scatter(slopes, errors)
+plt.ylabel('Error Cuadrático Medio', fontsize=16)
+plt.xlabel('Pendiente (m²/s)', fontsize=16)
 plt.ticklabel_format(useMathText=True)
 plt.tight_layout()
 plt.show()
